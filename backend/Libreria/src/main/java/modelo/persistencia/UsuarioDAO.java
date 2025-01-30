@@ -23,21 +23,20 @@ public class UsuarioDAO {
 	
 	public UsuarioDTO buscarPorNombre(UsuarioDTO usuario) throws SQLException{
 		String sql = "SELECT * from usuario where nombre = ?";
-		UsuarioDTO encontrado;
 		try (Connection conn = ConexionDB.getInstance().getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	            pstmt.setString(1, usuario.getNombre());
 	            try (ResultSet rs = pstmt.executeQuery()) {
 	            	if(rs.next()) {
-	            		encontrado = new UsuarioDTO();
-	            		encontrado.setId(rs.getInt("idusuario"));
-	            		encontrado.setContrasena(rs.getString("contrasena"));
-	            		encontrado.setNombre(rs.getString("nombre"));
-	            		encontrado.setCorreoElectronico(rs.getString("correoelectronico"));
-	            		encontrado.setDireccionFisica(rs.getString("direccionfisica"));
-	            		encontrado.setNumeroTelefonico(rs.getString("numerotelefonico"));
-	            		encontrado.setTipo(rs.getString("tipo"));
-	            		return encontrado; 
+	            		return new UsuarioDTO.Builder()
+	                            .setId(rs.getInt("idusuario"))  // Agrega este setter en el Builder si falta
+	                            .setContrasena(rs.getString("contrasena"))
+	                            .setNombre(rs.getString("nombre"))
+	                            .setCorreoElectronico(rs.getString("correoelectronico"))
+	                            .setDireccionFisica(rs.getString("direccionfisica"))
+	                            .setNumeroTelefonico(rs.getString("numerotelefonico"))
+	                            .setTipo(rs.getString("tipo"))
+	                            .build();
 	            	};
 	                
 	                

@@ -50,7 +50,7 @@ public class ServletUsuario extends HttpServlet{
 	    if("/usuarios/registrar".equals(urlPath)) {
 	    	response.getWriter().write("{\"message\": \""+gestor.registrarUsuario(keyValuePairs)+"\"}");
 	    }else if("/usuarios/login".equals(urlPath)) {
-	    	response.getWriter().write("{\"message\": \""+gestor.loginUsuario(keyValuePairs)+"\"}");
+	    	response.getWriter().write(gestor.loginUsuario(keyValuePairs));
 	    }else {
 	    	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write("{\"message\": \"URL no encontrada\"}");

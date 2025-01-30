@@ -72,7 +72,7 @@ public class GestorUsuarios {
 			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
 			if(encontrado != null) {
 				if(usuario.getContrasena().equals(encontrado.getContrasena())) {
-					return "Credenciales Validas";
+					return "{\"token\": \""+JwtUtil.generarToken(usuario.getNombre())+"\"}";
 				}else {
 					return "Contraseña invalida";
 				}

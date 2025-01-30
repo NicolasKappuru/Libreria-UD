@@ -14,7 +14,7 @@ public class GestorUsuarios {
 	}
 
 	public UsuarioDTO construirUsuario(String[] info) {
-		UsuarioDTO usuario = new UsuarioDTO();
+		UsuarioDTO.Builder usuario = new UsuarioDTO.Builder();
 	    
 	    for (String pair : info) {
 	        String[] entry = pair.split(":");
@@ -24,6 +24,9 @@ public class GestorUsuarios {
 	            case "nombre":  
 	            	usuario.setNombre(value);
 	                break;
+	            case "idusuario":
+	            	usuario.setId(Integer.parseInt(value)); 
+	            	break; 
 	            case "contrasena":
 	            	usuario.setContrasena(value);
 	                break;
@@ -41,7 +44,7 @@ public class GestorUsuarios {
 	            	break;
 	        }
         }
-	    return usuario;
+	    return usuario.build();
 	}
 	
 	public String registrarUsuario(String[] info){

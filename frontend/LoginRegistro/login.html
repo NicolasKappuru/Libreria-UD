@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="stylesLoginFormulario.css">
+     <!-- Asegúrate de que el CSS esté enlazado correctamente -->
+</head>
+<body>
+    <header>
+        <h1>Librería UD</h1>
+        <p>Bienvenido, ingresa tus datos para registrarte</p> <!--Por si vamos a ingresar algo mas -->
+    </header>
+    <main>
+        <div class="form-container">
+            <h2>Iniciar sesión</h2>
+            <form id="formLogin">
+                <div class="form-field">
+                    <input type="text" id="nombre" name="nombre" placeholder="Nombre de usuario" required>
+                </div>
+                <div class="form-field">
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+               <!-- Prueba #1, cambié el "password" a "text" (No es el tipo de dato) -->
+               <!-- El problema era la "ñ", contraseña -> contrasena -->
+                </div>
+                <div class="form-field">
+                    <button type="button" id="submitBtn">Ingresar</button>
+                </div>
+                <div class="form-field">
+                    <a href="formulario.html">Crear usuario</a> <!-- Enlace para ir al formulario de registro -->
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Librería UD</p>
+    </footer>
+    <script src="login.js"></script>
+</body>
+</html>

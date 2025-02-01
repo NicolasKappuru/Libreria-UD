@@ -39,7 +39,6 @@ CREATE TABLE public.reserva (
 CREATE TABLE public.evento (
 	idevento integer GENERATED ALWAYS AS IDENTITY NOT NULL,
 	tipoevento varchar NOT NULL,
-	archivo varchar(255) NULL,
 	usuario integer NOT NULL,
 	documento integer NOT NULL,
 	CONSTRAINT evento_pk PRIMARY KEY (idevento),

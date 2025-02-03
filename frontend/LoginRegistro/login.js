@@ -9,10 +9,8 @@ submitBtn.addEventListener('click', async () => {
         contrasena: formData.get('contrasena')
     };
 
-    console.log('Datos enviados:', data); // Verificar en la consola del navegador
-
     try {
-        const response = await fetch('http://localhost:8080/WebPrueba/ServletLogin', {
+        const response = await fetch('http://localhost:8080/Libreria/usuario/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,11 +19,15 @@ submitBtn.addEventListener('click', async () => {
         });
 
         const responseText = await response.text(); // Leer como texto
-        console.log('Respuesta cruda:', responseText);
 
         try {
             const result = JSON.parse(responseText); // Intentar parsear la respuesta como JSON
-            alert(result.message); // Mostrar mensaje del servidor en una alerta
+            if(["Nombre de usuario no existe", "Contraseña invalida"].includes(result["token"])){
+                alert(result["token"]);
+            }else{
+                localStorage.setItem("token", result["token"])
+                location.replace("../PaginaPrincipal/paginaPrincipal.html");
+            }
         } catch (error) {
             alert('Error al analizar el JSON: ' + error.message);
         }

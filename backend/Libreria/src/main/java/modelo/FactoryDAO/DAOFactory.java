@@ -6,7 +6,7 @@ import modelo.persistenciaDAO.PonenciaDAO;
 
 public interface DAOFactory {
 
-	ArticuloDAO crearArticulo();
 	LibroDAO crearLibro(); 
 	PonenciaDAO crearPonencia(); 
+	ArticuloDAO crearArticulo();
 }

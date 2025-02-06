@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UsuarioDAO {
+import modelo.persistenciaDAO.DAO;
+
+public class UsuarioDAO implements DAO<UsuarioDTO>{
 	
+	@Override
 	public void crear(UsuarioDTO usuario) throws SQLException{
 		String sql = "INSERT INTO usuario (nombre, contrasena, correoelectronico, direccionfisica, numerotelefonico) VALUES (?, ?, ?, ?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
@@ -19,7 +22,8 @@ public class UsuarioDAO {
 			pstmt.executeUpdate();
 		}
 	}
-	
+
+	@Override
 	public UsuarioDTO buscarPorNombre(String usuario) throws SQLException{
 		String sql = "SELECT * from usuario where nombre = ?";
 		try (Connection conn = ConexionDB.getInstance().getConnection();
@@ -41,4 +45,17 @@ public class UsuarioDAO {
 	    }
 	    return null;
 	}
+
+	@Override
+	public void eliminarPorID(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actualizar(UsuarioDTO DTO) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

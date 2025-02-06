@@ -1,4 +1,6 @@
-package modelo.DocumentoDTO; 
+package modelo.DocumentoDTO;
+
+import modelo.DocumentoDTO.ArticuloDTO.BuilderArticulo;
 
 public class PonenciaDTO extends DocumentoDTO {
 
@@ -63,6 +65,12 @@ public class PonenciaDTO extends DocumentoDTO {
             super.setFechaPublicacion(fechaPublicacion);
             return this;
         }
+        
+        @Override
+        public BuilderPonencia setAutores(String autores) {
+            super.setAutores(autores);
+            return this;
+        }
 
         @Override
         public BuilderPonencia setDiaPublicacion(String diaPublicacion) {
@@ -70,6 +78,12 @@ public class PonenciaDTO extends DocumentoDTO {
             return this;
         }
 
+        @Override
+        public BuilderPonencia setMesPublicacion(String mesPublicacion) {
+            super.setMesPublicacion(mesPublicacion);
+            return this;
+        }
+        
         @Override
         public BuilderPonencia setEditorial(String editorial) {
             super.setEditorial(editorial);

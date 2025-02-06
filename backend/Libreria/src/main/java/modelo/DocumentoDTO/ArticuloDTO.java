@@ -51,10 +51,22 @@ public class ArticuloDTO extends DocumentoDTO {
             super.setFechaPublicacion(fechaPublicacion);
             return this;
         }
+        
+        @Override
+        public BuilderArticulo setAutores(String autores) {
+            super.setAutores(autores);
+            return this;
+        }
 
         @Override
         public BuilderArticulo setDiaPublicacion(String diaPublicacion) {
             super.setDiaPublicacion(diaPublicacion);
+            return this;
+        }
+        
+        @Override
+        public BuilderArticulo setMesPublicacion(String mesPublicacion) {
+            super.setMesPublicacion(mesPublicacion);
             return this;
         }
 

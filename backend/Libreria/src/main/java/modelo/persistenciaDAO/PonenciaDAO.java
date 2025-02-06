@@ -1,15 +1,25 @@
 package modelo.persistenciaDAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import modelo.DocumentoDTO.PonenciaDTO;
+import modelo.persistencia.ConexionDB;
 
 public class PonenciaDAO implements DAO<PonenciaDTO>{
 
 	@Override
-	public void crear(PonenciaDTO DTO) throws SQLException {
-		// Aqui va la logica para ponencias
-		
+	public void crear(PonenciaDTO ponencia) throws SQLException {
+		String sql = "INSERT INTO ponencia (congreso, isbn, documento) VALUES (?, ?, ?)";
+		try(Connection conexion = ConexionDB.getInstance().getConnection();
+			PreparedStatement pstmt = conexion.prepareStatement(sql)){
+			pstmt.setString(1, ponencia.getCongreso());
+			pstmt.setString(2, ponencia.getIsbn());
+			pstmt.setInt(3, 4);
+			pstmt.executeUpdate();
+			
+		}
 	}
 
 	@Override

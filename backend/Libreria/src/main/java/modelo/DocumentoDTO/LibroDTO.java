@@ -1,5 +1,7 @@
 package modelo.DocumentoDTO;
 
+import modelo.DocumentoDTO.ArticuloDTO.BuilderArticulo;
+
 public class LibroDTO extends DocumentoDTO{
  
 	private static final long serialVersionUID = 1L;
@@ -63,10 +65,22 @@ public class LibroDTO extends DocumentoDTO{
             super.setFechaPublicacion(fechaPublicacion);
             return this;
         }
+        
+        @Override
+        public BuilderLibro setAutores(String autores) {
+            super.setAutores(autores);
+            return this;
+        }
 
         @Override
         public BuilderLibro setDiaPublicacion(String diaPublicacion) {
             super.setDiaPublicacion(diaPublicacion);
+            return this;
+        }
+        
+        @Override
+        public BuilderLibro setMesPublicacion(String mesPublicacion) {
+            super.setMesPublicacion(mesPublicacion);
             return this;
         }
 

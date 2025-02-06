@@ -7,6 +7,8 @@ public class DocumentoDTO implements Serializable{
 	private int idDocumento;
 	private String titulo; 
 	private String fechaPublicacion; 
+	private String autores; 
+	private String mesPublicacion; 
 	private String diaPublicacion; 
 	private String editorial; 
 	private String estado; 
@@ -16,7 +18,9 @@ public class DocumentoDTO implements Serializable{
 		this.idDocumento = builder.idDocumento; 
 		this.titulo = builder.titulo; 
 		this.fechaPublicacion = builder.fechaPublicacion; 
+		this.autores = builder.autores;
 		this.diaPublicacion = builder.diaPublicacion; 
+		this.mesPublicacion = builder.mesPublicacion; 
 		this.editorial = builder.editorial; 
 		this.estado = builder.estado; 
 		this.propietario = builder.propietario; 
@@ -28,7 +32,11 @@ public class DocumentoDTO implements Serializable{
 	
 	public String getFechaPublicacion() { return fechaPublicacion; }
 	
+	public String getAutores() { return autores; }
+	
 	public String getDiaPublicacion() {	return diaPublicacion; }
+	
+	public String getMesPublicacion() { return mesPublicacion; }
 	
 	public String getEditorial() { return editorial; }
 	
@@ -46,7 +54,9 @@ public class DocumentoDTO implements Serializable{
 		private int idDocumento;
 		private String titulo; 
 		private String fechaPublicacion; 
+		private String autores; 
 		private String diaPublicacion; 
+		private String mesPublicacion; 
 		private String editorial; 
 		private String estado; 
 		private String propietario;
@@ -66,8 +76,18 @@ public class DocumentoDTO implements Serializable{
 			return this;
 		}
 		
+		public BuilderDoc setAutores(String autores) {
+			this.autores = autores; 
+			return this; 
+		}
+		
 		public BuilderDoc setDiaPublicacion(String diaPublicacion) { 
 			this.diaPublicacion = diaPublicacion;
+			return this; 
+		}
+		
+		public BuilderDoc setMesPublicacion(String mesPublicacion) {
+			this.mesPublicacion = mesPublicacion; 
 			return this; 
 		}
         

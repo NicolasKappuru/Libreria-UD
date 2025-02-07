@@ -3,6 +3,7 @@ package modelo.persistenciaDAO;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,16 +37,36 @@ public class DocumentoDAO implements DAO<DocumentoDTO>{
 	}
 
 	@Override
-	public void eliminarPorID(int id) {
-		// TODO Auto-generated method stub
-		
+	public void eliminarPorID(int id) throws SQLException {
+	    String sql = "DELETE FROM documento WHERE iddocumento = ?";
+	    try (Connection conn = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setInt(1, id);
+	        pstmt.executeUpdate();
+	    }
 	}
 
 	@Override
-	public void actualizar(DocumentoDTO DTO) {
-		// TODO Auto-generated method stub
-		
+	public void actualizar(DocumentoDTO documento) throws SQLException {
+	    String sql = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
+	                 "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
+	    
+	    try (Connection conn = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setString(1, documento.getTitulo());
+	        pstmt.setDate(2, convertirStringADate(documento.getFechaPublicacion()));
+	        pstmt.setString(3, documento.getAutores());
+	        pstmt.setString(4, documento.getDiaPublicacion());
+	        pstmt.setString(5, documento.getMesPublicacion());
+	        pstmt.setString(6, documento.getEditorial());
+	        pstmt.setString(7, documento.getEstado());
+	        pstmt.setInt(8, Integer.parseInt(documento.getPropietario()));
+	        pstmt.setInt(9, documento.getIdDocumento()); // Se usa el ID del objeto DTO
+			pstmt.executeUpdate();
+	    }
 	}
+
 	
     public static Date convertirStringADate(String fechaStr) {
         try {
@@ -57,6 +78,33 @@ public class DocumentoDAO implements DAO<DocumentoDTO>{
             return null; // Manejo de error: Devuelve null si hay un fallo
         }
     }
+
+    @Override
+    public DocumentoDTO buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM documento WHERE iddocumento = ?";
+        try (Connection conn = ConexionDB.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println(rs.getString("titulo"));
+                    return new DocumentoDTO.BuilderDoc()
+                            .setIdDocumento(rs.getInt("iddocumento"))
+                            .setTitulo(rs.getString("titulo"))
+                            .setFechaPublicacion(rs.getString("fechapublicacion"))
+                            .setAutores(rs.getString("autores"))
+                            .setDiaPublicacion(rs.getString("diapublicacion"))
+                            .setMesPublicacion(rs.getString("mespublicacion"))
+                            .setEditorial(rs.getString("editorial"))
+                            .setEstado(rs.getString("estado"))
+                            .setPropietario(rs.getString("propietario"))
+                            .build();
+                }
+            }
+        }
+        return null;
+    }
+
 
 
 

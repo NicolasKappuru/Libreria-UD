@@ -1,8 +1,12 @@
 package modelo.persistenciaDAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import modelo.DocumentoDTO.ArticuloDTO;
 import modelo.DocumentoDTO.LibroDTO;
@@ -30,13 +34,114 @@ public class LibroDAO implements DAO<LibroDTO>{
 	}
 
 	@Override
-	public void eliminarPorID(int id) {
-		// Aqui va la logica para Libros
+	public void eliminarPorID(int id) throws SQLException {
+	    String sqlLibro = "DELETE FROM libro WHERE idlibro = ?";
+	    String sqlDocumento = "DELETE FROM documento WHERE iddocumento = " +
+	                          "(SELECT documento FROM libro WHERE idlibro = ?)";
+
+	    try (Connection conn = ConexionDB.getInstance().getConnection()) {
+	        conn.setAutoCommit(false);
+
+	        try (PreparedStatement pstmtDocumento = conn.prepareStatement(sqlDocumento);
+	             PreparedStatement pstmtLibro = conn.prepareStatement(sqlLibro)) {
+	            
+	            pstmtDocumento.setInt(1, id);
+	            pstmtDocumento.executeUpdate();
+
+	            pstmtLibro.setInt(1, id);
+	            pstmtLibro.executeUpdate();
+	            
+	            conn.commit();
+	        } catch (SQLException e) {
+	            conn.rollback();
+	            throw e;
+	        }
+	    }
 	}
 
+
 	@Override
-	public void actualizar(LibroDTO DTO) {
-		// Aqui va la logica para Libros
+	public void actualizar(LibroDTO libro) throws SQLException {
+	    String sqlDocumento = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
+	                           "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
+	    
+	    String sqlLibro = "UPDATE libro SET isbn = ?, numeropaginas = ? WHERE idlibro = ?";
+
+	    try (Connection conn = ConexionDB.getInstance().getConnection()) {
+	        conn.setAutoCommit(false); 
+
+	        try (PreparedStatement pstmtDocumento = conn.prepareStatement(sqlDocumento);
+	             PreparedStatement pstmtLibro = conn.prepareStatement(sqlLibro)) {
+
+	            pstmtDocumento.setString(1, libro.getTitulo());
+	            pstmtDocumento.setDate(2, convertirStringADate(libro.getFechaPublicacion()));
+	            pstmtDocumento.setString(3, libro.getAutores());
+	            pstmtDocumento.setString(4, libro.getDiaPublicacion());
+	            pstmtDocumento.setString(5, libro.getMesPublicacion());
+	            pstmtDocumento.setString(6, libro.getEditorial());
+	            pstmtDocumento.setString(7, libro.getEstado());
+	            pstmtDocumento.setInt(8, Integer.parseInt(libro.getPropietario()));
+	            pstmtDocumento.setInt(9, libro.getIdDocumento());
+	            pstmtDocumento.executeUpdate();
+
+	            pstmtLibro.setString(1, libro.getIsbn());
+	            pstmtLibro.setInt(2, Integer.parseInt(libro.getNumeroPaginas()));
+	            pstmtLibro.setInt(3, libro.getIdLibro());
+	            pstmtLibro.executeUpdate();
+
+	            conn.commit(); // Confirma los cambios
+	        } catch (SQLException e) {
+	            conn.rollback(); // Revierte en caso de error
+	            throw e;
+	        }
+	    }
+	 }
+
+	  public static Date convertirStringADate(String fechaStr) {
+	        try {
+	            SimpleDateFormat formato = new SimpleDateFormat("d/M/yyyy"); // Define el formato esperado
+	            java.util.Date fechaUtil = formato.parse(fechaStr); // Convierte a java.util.Date
+	            return new java.sql.Date(fechaUtil.getTime()); // Convierte a java.sql.Date
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	            return null; // Manejo de error: Devuelve null si hay un fallo
+	        }
+	    }
+
+	@Override
+	public LibroDTO buscarPorId(int id) throws SQLException {
+	    String sql = "SELECT l.idlibro, l.isbn, l.numeropaginas, " +
+	                 "d.iddocumento, d.titulo, d.fechapublicacion, d.autores, " +
+	                 "d.mespublicacion, d.diapublicacion, d.editorial, d.estado, d.propietario " +
+	                 "FROM libro l " +
+	                 "JOIN documento d ON l.documento = d.iddocumento " +
+	                 "WHERE l.idlibro = ?";
+	    
+	    try (Connection conn = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setInt(1, id);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                System.out.println(rs.getString("titulo"));
+	                return new LibroDTO.BuilderLibro()
+	                        .setIdLibro(rs.getInt("idlibro"))  // Datos de libro
+	                        .setIsbn(rs.getString("isbn"))
+	                        .setNumeroPaginas(rs.getString("numeropaginas"))
+	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados
+	                        .setTitulo(rs.getString("titulo"))
+	                        .setFechaPublicacion(rs.getString("fechapublicacion"))
+	                        .setAutores(rs.getString("autores"))
+	                        .setMesPublicacion(rs.getString("mespublicacion"))
+	                        .setDiaPublicacion(rs.getString("diapublicacion"))
+	                        .setEditorial(rs.getString("editorial"))
+	                        .setEstado(rs.getString("estado"))
+	                        .setPropietario(rs.getString("propietario"))
+	                        .build();
+	            }
+	        }
+	    }
+	    return null;
 	}
+
 
 }

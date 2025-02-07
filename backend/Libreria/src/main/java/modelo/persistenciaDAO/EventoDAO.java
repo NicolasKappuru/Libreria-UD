@@ -30,4 +30,10 @@ public class EventoDAO implements DAO<EventoDTO>{
 		
 	}
 
+	@Override
+	public EventoDTO buscarPorId(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

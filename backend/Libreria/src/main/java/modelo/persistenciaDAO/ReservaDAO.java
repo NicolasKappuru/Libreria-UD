@@ -30,4 +30,10 @@ public class ReservaDAO implements DAO<ReservaDTO> {
 		
 	}
 
+	@Override
+	public ReservaDTO buscarPorId(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

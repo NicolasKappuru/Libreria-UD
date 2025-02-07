@@ -5,9 +5,9 @@ import modelo.DocumentoDTO.ArticuloDTO.BuilderArticulo;
 public class LibroDTO extends DocumentoDTO{
  
 	private static final long serialVersionUID = 1L;
-	private int idLibro; 
-	private String isbn; 
-    private String numeroPaginas; 
+	private int idLibro; //Atributos de libro
+	private String isbn; //Atributos de libro
+    private String numeroPaginas; //Atributos de libro
    
     public LibroDTO(BuilderLibro builder) {
         super(builder); 
@@ -27,6 +27,11 @@ public class LibroDTO extends DocumentoDTO{
     public String getNumeroPaginas() {
 		return numeroPaginas;
 	}
+    
+    @Override
+    public String toString() {
+    	return this.getTitulo()+" "+this.numeroPaginas+" "+this.isbn;
+    }
 
     public static class BuilderLibro extends BuilderDoc {
         private int idLibro; 

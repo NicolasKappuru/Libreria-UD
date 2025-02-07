@@ -27,6 +27,11 @@ public class PonenciaDTO extends DocumentoDTO {
     public String getIsbn() {
         return isbn;
     }
+    
+    @Override
+    public String toString() {
+    	return this.getTitulo()+" "+this.getIsbn()+" "+this.congreso;
+    }
 
     public static class BuilderPonencia extends BuilderDoc {
         private int idPonencia;

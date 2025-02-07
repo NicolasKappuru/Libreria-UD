@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class DocumentoDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private int idDocumento;
+	private int idDocumento; 
 	private String titulo; 
 	private String fechaPublicacion; 
 	private String autores; 
@@ -46,7 +46,7 @@ public class DocumentoDTO implements Serializable{
 	
 	@Override
 	public String toString() {
-		String cadena = String.valueOf(this.idDocumento)+" "+this.titulo+" "+this.fechaPublicacion; 
+		String cadena = String.valueOf(this.idDocumento)+" "+this.titulo+" "+this.estado; 
 		return cadena;
 	}
 	

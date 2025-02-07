@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #87CEFA;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 1%;
+    width: 100%;
+}
+
+.midcontainer {
+    display: flex;
+    position: absolute;
+    background-color: whitesmoke;
+    height: 75%;
+    width: 100%;
+    padding-bottom: 2%;
+}
+
+.editor {
+    width: 50%;
+    padding: 2%;
+    padding-top: 0%;
+    border-right: 2px solid #000;
+}
+.historial {
+    width: 50%;
+    padding: 20px;
+}
+.campo {
+    margin-bottom: 10px;
+}
+.campo label {
+    font-weight: bold;
+}
+.campo input {
+    width: 100%;
+    padding: 5px;
+}

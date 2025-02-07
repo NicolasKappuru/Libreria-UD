@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Documentos</title>
+    <link rel="stylesheet" href="stylesDescripciónDocumento.css">
+</head>
+<body>
+    <h1>Modificar</h1>
+    <div class="midcontainer">
+        <div class="container">
+            <div class="editor">
+                <h3>Editar Documento</h3>
+                <label for="tipo">Tipo de Documento:</label>
+                <select id="tipo" onchange="cambiarFormulario()">
+                    <option value="libro">Libro</option>
+                    <option value="articulo">Artículo</option>
+                    <option value="ponencia">Ponencia</option>
+                </select>
+                <div id="formulario">
+                    <!-- Aquí se insertará el formulario correspondiente -->
+                    <button>Enviar</button>
+                </div>
+            </div>
+            <div class="historial">
+                <h3>Historial de Eventos</h3>
+                <ul id="listaHistorial"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="descripcionDocumento.js"></script>
+</body>
+</html>

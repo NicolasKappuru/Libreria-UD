@@ -11,10 +11,15 @@ public class UsuarioDTO implements Serializable{
 	private String correoElectronico;
 	private String direccionFisica;
 	private String numeroTelefonico;
-	private String tipo;
 	
 	
 	public UsuarioDTO(Builder builder) {
+		this.id = builder.id;
+        this.nombre = builder.nombre;
+        this.contrasena = builder.contrasena;
+        this.correoElectronico = builder.correoElectronico;
+        this.direccionFisica = builder.direccionFisica;
+        this.numeroTelefonico = builder.numeroTelefonico;
 	}
 	
 	public int getId() { return id; }
@@ -27,11 +32,13 @@ public class UsuarioDTO implements Serializable{
 	
 	public String getDireccionFisica() { return direccionFisica; }
 
-	public String getNumeroTelefonico() { return numeroTelefonico; }
-
-	public String getTipo() { return tipo; }
+	public String getNumeroTelefonico() { return numeroTelefonico; }	
 	
-	
+	@Override
+	public String toString() {
+		return this.nombre + " " + this.id + " " + this.contrasena + " " + this.correoElectronico + " " + this.direccionFisica + " " +  this.numeroTelefonico;
+	}
+	 
 	//Nuestro Builder para construir DTOs inmutables
 	public static class Builder {
         private String nombre;
@@ -40,7 +47,6 @@ public class UsuarioDTO implements Serializable{
         private String correoElectronico;
         private String direccionFisica;
         private String numeroTelefonico;
-        private String tipo;
 
         public Builder setNombre(String nombre) {
             this.nombre = nombre;
@@ -72,10 +78,6 @@ public class UsuarioDTO implements Serializable{
             return this;
         }
 
-        public Builder setTipo(String tipo) {
-            this.tipo = tipo;
-            return this;
-        }
 
         public UsuarioDTO build() {
             return new UsuarioDTO(this);

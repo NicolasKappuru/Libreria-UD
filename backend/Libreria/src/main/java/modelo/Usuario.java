@@ -7,29 +7,24 @@ public class Usuario {
 	private String correoElectronico;
 	private String direccionFisica;
 	private String numeroTelefonico;
-	private String tipo;
 	
 	public Usuario() {
 		
 	}
 
-	public Usuario(int id, String nombre, String correoElectronico, String direccionFisica, String numeroTelefonico,
-			String tipo) {
+	public Usuario(int id, String nombre, String correoElectronico, String direccionFisica, String numeroTelefonico) {
 		this.id = id;
 		this.nombre = nombre;
 		this.correoElectronico = correoElectronico;
 		this.direccionFisica = direccionFisica;
 		this.numeroTelefonico = numeroTelefonico;
-		this.tipo = tipo;
 	}
 
-	public Usuario(String nombre, String correoElectronico, String direccionFisica, String numeroTelefonico,
-			String tipo) {
+	public Usuario(String nombre, String correoElectronico, String direccionFisica, String numeroTelefonico) {
 		this.nombre = nombre;
 		this.correoElectronico = correoElectronico;
 		this.direccionFisica = direccionFisica;
 		this.numeroTelefonico = numeroTelefonico;
-		this.tipo = tipo;
 	}
 
 	public int getId() {
@@ -72,13 +67,6 @@ public class Usuario {
 		this.numeroTelefonico = numeroTelefonico;
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 	
 	
 	

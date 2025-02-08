@@ -10,7 +10,8 @@ public class ConexionDB {
 	private Connection conexion;
 	private static final String URL = "jdbc:postgresql://localhost:5432/LibreriaDB";
 	private static final String USER = "postgres";
-	private static final String PASSWORD = "postgres"; // La contraseña se cambia con la del PostgreSQL local. (IMPORTANTE) 
+	private static final String PASSWORD = "Mawile12345";
+
 	
 	private ConexionDB() throws SQLException {
 		try {

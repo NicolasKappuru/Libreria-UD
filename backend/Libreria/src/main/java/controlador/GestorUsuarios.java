@@ -39,9 +39,6 @@ public class GestorUsuarios {
 	            case "telefono":
 	            	usuario.setNumeroTelefonico(value);
 	                break;
-	            case "tipo":
-	            	usuario.setTipo(value);
-	            	break;
 	        }
         }
 	    return usuario.build();
@@ -51,19 +48,19 @@ public class GestorUsuarios {
 		
 		UsuarioDTO usuario = construirUsuario(info);
 		try {
-			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
+			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario.getNombre());
 			if(encontrado == null) {
 				try {
 					usuarioDAO.crear(usuario);
-					return "Creado";
+					return "{\"mensaje\": \"Creado\"}";
 				} catch (SQLException e) {
-					return "Error";
+					return "{\"mensaje\": \"Error\"}";
 				}
 			}else {
-				return "Nombre de usuario ya existe";
+				return "{\"mensaje\": \"Nombre de usuario ya existe\"}";
 			}
 		} catch (SQLException e) {
-			return "Error: " +e;
+			return "{\"mensaje\": \"Error: " +e+"\"}";
 		}
 		
 	}
@@ -72,18 +69,32 @@ public class GestorUsuarios {
 		
 		UsuarioDTO usuario = construirUsuario(info);
 		try {
-			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
+			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario.getNombre());
 			if(encontrado != null) {
 				if(usuario.getContrasena().equals(encontrado.getContrasena())) {
 					return "{\"token\": \""+JwtUtil.generarToken(usuario.getNombre())+"\"}";
 				}else {
-					return "Contraseña invalida";
+					return "{\"token\": \"Contraseña invalida\"}";
 				}
 			}else {
-				return "Nombre de usuario no existe";
+				return "{\"token\": \"Nombre de usuario no existe\"}";
 			}
 		} catch (SQLException e) {
-			return "Error: " +e;
+			return "{\"token\": \"Error: " +e+"\"}";
+		}
+	}
+	
+	public String obtenerUsuario(String usuario) {
+		try {
+			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
+			return "{"
+            + "\"nombre\":\"" + encontrado.getNombre() + "\","
+            + "\"correo\":\"" + encontrado.getCorreoElectronico() + "\","
+            + "\"direccion\":\"" + encontrado.getDireccionFisica() + "\","
+            + "\"telefono\":\"" + encontrado.getNumeroTelefonico() + "\""
+            + "}";
+		}catch (SQLException e) {
+			return "Error: "+e;
 		}
 	}
 }

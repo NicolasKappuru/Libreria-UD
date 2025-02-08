@@ -9,14 +9,9 @@ submitBtn.addEventListener('click', async () => { // REST
         contrasena: formData.get('contrasena') // Este es único del Login.
     };
 
-    console.log('Datos enviados:', data); // Verificar en la consola del navegador (DEPURACIÓN ----->)
-
-
-    // fetch anterior: http://localhost:8080/WebPrueba/ServletLogin
-    // Yo pondría para el Formulario, usuarios/registrar
     try {
-        const response = await fetch('http://localhost:8080/Libreria/usuarios/login', { // El await espera hasta que llegue una respuesta
-            method: 'POST', // Se envía la petición.
+        const response = await fetch('http://localhost:8080/Libreria/usuario/login', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -24,14 +19,15 @@ submitBtn.addEventListener('click', async () => { // REST
         });
 
         const responseText = await response.text(); // Leer como texto
-        console.log('Respuesta cruda:', responseText); // Verificar en la consola del navegador (DEPURACION ----->
-                                                        // 1. Creado["El usuario fue creado exitosamente"], 
-                                                        // 2. Nombre de Usuario ya Existente["Nombre de usuario ya registrado"], 
-                                                        // 3. Error["Hay algun error con el servidor. (Muy extraño)"].
 
         try {
             const result = JSON.parse(responseText); // Intentar parsear la respuesta como JSON
-            alert(result.message); // Mostrar mensaje del servidor en una alerta
+            if(["Nombre de usuario no existe", "Contraseña invalida"].includes(result["token"])){
+                alert(result["token"]);
+            }else{
+                localStorage.setItem("token", result["token"])
+                location.replace("../PaginaPrincipal/paginaPrincipal.html");
+            }
         } catch (error) {
             alert('Error al analizar el JSON: ' + error.message);
         }

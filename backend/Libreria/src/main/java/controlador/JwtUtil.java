@@ -3,6 +3,7 @@ package controlador;
 import java.util.Date;
 import java.security.Key;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -21,6 +22,14 @@ public class JwtUtil {
 	            .setExpiration(horaExp)
 	            .signWith(CLAVE)
 	            .compact();
+	}
+	
+	public static Claims validarToken(String token) throws Exception{
+		return Jwts.parserBuilder()
+				.setSigningKey(CLAVE)
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
 	}
 	
 	

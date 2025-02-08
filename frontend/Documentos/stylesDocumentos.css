@@ -3,10 +3,11 @@ body {
     text-align: center;
     background-color: #87CEFA;
 }
+
 .container {
     display: flex;
     justify-content: center;
-    gap: 5%;
+    gap: 1%;
     margin-top: 20px;
 }
 
@@ -22,43 +23,76 @@ body {
 .document {
     border-radius: 2%;
     background: white;
-    padding: 10px;
-    border: 2px solid black;
+    padding: 1%;
     margin-top: 3%;
-    width: 25em;
+    border-radius: 10px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 28em;
+    transition: transform 0.2s ease-in-out;
 }
+
+.document:hover {
+    transform: scale(1.05);
+}
+
 .header {
     border-radius: 3%;
     font-weight: bold;
-    background: lightgray;
+    background: #4682B4;
+    color: white;
     padding: 5px;
+    text-transform: uppercase;
 }
+
 .fields {
     text-align: left;
     margin-top: 10px;
 }
+
+.fields strong {
+    color: #333;
+}
+
 .fields div {
-    margin-bottom: 5px;
+    margin-bottom: 1%;
+    padding: 1%;
+    background: #f8f8f8;
+    border-radius: 2%;
+    font-size: 0.90em;
 }
 
 .subarrow {
-    margin-top: 23%;
+    margin-top: 7%;
+}
+
+.subarrow1 {
+    margin-top: 14%;
 }
 
 .arrow {
     border-radius: 3%;
     background-color: #87CEFA;
     cursor: pointer;
-    font-size: 20px;
-    color: black;
+    font-size: 1.33em;
+    color: #4682B4;
+    transition: color 0.2s;
 }
 
-.arrow:hover, .botonBusquedaDocumento:hover {
-    background-color: #4682b4;
+.arrow:hover {
+    color: lightgreen;
 }
 
-.arrow:active, .botonBusquedaDocumento:active {
-    background-color: darkcyan;
+.arrow:active {
+    background-color: lightgreen;
+    color: #4682b4;
+}
+
+.botonBusquedaDocumento:hover {
+    background-color: lightgreen;
+}
+
+.botonBusquedaDocumento:active {
+    color: white;
 }
 
 footer {

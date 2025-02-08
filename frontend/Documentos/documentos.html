@@ -11,36 +11,30 @@
    <div class="midcontainer">
         <div class="container">
             <div>
-                <form>
+                <form action="descripcionDocumento.html" method="GET">
                     <input class="busquedaDocumento" placeholder="Ingrese el DOCUMENTO que desea buscar.">
-                    <button class="botonBusquedaDocumento">Buscar</button>
+                    <button class="botonBusquedaDocumento" onclick="realizarConsulta()">Consultar</button>
                 </form>
             </div>
             <div class="document" id="libros">
                 <div class="header">LIBROS</div>
                 <div class="fields" id="librosFields"></div>
                 <div class="subarrow">
-                    <hr>
                     <div class="arrow" onclick="nextDocument('libros')">➡</div>
-                    <hr>
                 </div>
             </div>
             <div class="document" id="articulos">
                 <div class="header">ARTÍCULOS</div>
                 <div class="fields" id="articulosFields"></div>
-                <div class="subarrow">
-                    <br><hr>
+                <div class="subarrow1">
                     <div class="arrow" onclick="nextDocument('artículos')">➡</div>
-                    <hr>
                 </div>
             </div>
             <div class="document" id="ponencias">
                 <div class="header">PONENCIAS</div>
                 <div class="fields" id="ponenciasFields"></div>
                 <div class="subarrow">
-                    <hr>
                     <div class="arrow" onclick="nextDocument('ponencias')">➡</div>
-                    <hr>
                 </div>
             </div>
         </div>

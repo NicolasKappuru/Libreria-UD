@@ -3,17 +3,11 @@ package modelo.DocumentoDTO;
 public class ArticuloDTO extends DocumentoDTO {
 
     private static final long serialVersionUID = 1L;
-    private int idArticulo;
     private String ssn;
 
     public ArticuloDTO(BuilderArticulo builder) {
         super(builder);
-        this.idArticulo = builder.idArticulo;
         this.ssn = builder.ssn;
-    }
-
-    public int getIdArticulo() {
-        return idArticulo;
     }
 
     public String getSsn() {
@@ -26,13 +20,7 @@ public class ArticuloDTO extends DocumentoDTO {
     }
     
     public static class BuilderArticulo extends BuilderDoc {
-        private int idArticulo;
         private String ssn;
-
-        public BuilderArticulo setIdArticulo(int idArticulo) {
-            this.idArticulo = idArticulo;
-            return this;
-        }
 
         public BuilderArticulo setSsn(String ssn) {
             this.ssn = ssn;

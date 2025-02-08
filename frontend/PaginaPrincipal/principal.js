@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    console.log(localStorage.getItem("token"));
     fetch('http://localhost:8080/Libreria/usuario/datos', {
         method: 'GET',
         headers: {

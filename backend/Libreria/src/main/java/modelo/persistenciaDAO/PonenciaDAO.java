@@ -85,7 +85,6 @@ public class PonenciaDAO implements DAO<PonenciaDTO>{
 	            
 	            pstmtPonencia.setString(1, ponencia.getCongreso());
 	            pstmtPonencia.setString(2, ponencia.getIsbn());
-	            pstmtPonencia.setInt(3, ponencia.getIdPonencia());
 	            pstmtPonencia.executeUpdate();
 	        
 	            conn.commit();
@@ -123,7 +122,6 @@ public class PonenciaDAO implements DAO<PonenciaDTO>{
 	            if (rs.next()) {
 	                System.out.println(rs.getString("titulo"));
 	                return new PonenciaDTO.BuilderPonencia()
-	                        .setIdPonencia(rs.getInt("idponencia"))  // Datos de ponencia
 	                        .setCongreso(rs.getString("congreso"))
 	                        .setIsbn(rs.getString("isbn"))
 	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados

@@ -8,13 +8,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import modelo.DocumentoDTO.ArticuloDTO;
 import modelo.DocumentoDTO.LibroDTO;
 import modelo.persistencia.ConexionDB;
 
-public class LibroDAO implements DAO<LibroDTO>{
+public class LibroDAO{
 
-	@Override
 	public void crear(LibroDTO libro) throws SQLException {
 		String sql = "INSERT INTO libro (numeropaginas, isbn, documento) VALUES (?, ?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
@@ -27,13 +25,11 @@ public class LibroDAO implements DAO<LibroDTO>{
 	}
 	
 
-	@Override
 	public LibroDTO buscarPorNombre(String nombre) throws SQLException{
 		// Aqui va la logica para Libros
 		return null;
 	}
 
-	@Override
 	public void eliminarPorID(int id) throws SQLException {
 	    String sqlLibro = "DELETE FROM libro WHERE idlibro = ?";
 	    String sqlDocumento = "DELETE FROM documento WHERE iddocumento = " +
@@ -60,7 +56,6 @@ public class LibroDAO implements DAO<LibroDTO>{
 	}
 
 
-	@Override
 	public void actualizar(LibroDTO libro) throws SQLException {
 	    String sqlDocumento = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
 	                           "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
@@ -86,7 +81,6 @@ public class LibroDAO implements DAO<LibroDTO>{
 
 	            pstmtLibro.setString(1, libro.getIsbn());
 	            pstmtLibro.setInt(2, Integer.parseInt(libro.getNumeroPaginas()));
-	            pstmtLibro.setInt(3, libro.getIdLibro());
 	            pstmtLibro.executeUpdate();
 
 	            conn.commit(); // Confirma los cambios
@@ -108,7 +102,6 @@ public class LibroDAO implements DAO<LibroDTO>{
 	        }
 	    }
 
-	@Override
 	public LibroDTO buscarPorId(int id) throws SQLException {
 	    String sql = "SELECT l.idlibro, l.isbn, l.numeropaginas, " +
 	                 "d.iddocumento, d.titulo, d.fechapublicacion, d.autores, " +
@@ -124,7 +117,6 @@ public class LibroDAO implements DAO<LibroDTO>{
 	            if (rs.next()) {
 	                System.out.println(rs.getString("titulo"));
 	                return new LibroDTO.BuilderLibro()
-	                        .setIdLibro(rs.getInt("idlibro"))  // Datos de libro
 	                        .setIsbn(rs.getString("isbn"))
 	                        .setNumeroPaginas(rs.getString("numeropaginas"))
 	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados

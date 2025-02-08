@@ -1,25 +1,18 @@
 package modelo.DocumentoDTO;
 
-import modelo.DocumentoDTO.ArticuloDTO.BuilderArticulo;
 
 public class LibroDTO extends DocumentoDTO{
  
 	private static final long serialVersionUID = 1L;
-	private int idLibro; //Atributos de libro
 	private String isbn; //Atributos de libro
     private String numeroPaginas; //Atributos de libro
    
     public LibroDTO(BuilderLibro builder) {
         super(builder); 
         this.isbn = builder.isbn;
-        this.idLibro = builder.idLibro; 
         this.numeroPaginas = builder.numeroPaginas; 
     }
 
-    public int getIdLibro() {
-		return idLibro;
-	}
-    
     public String getIsbn() {
         return isbn;
     }
@@ -34,14 +27,8 @@ public class LibroDTO extends DocumentoDTO{
     }
 
     public static class BuilderLibro extends BuilderDoc {
-        private int idLibro; 
     	private String isbn; 
         private String numeroPaginas; 
-
-        public BuilderLibro setIdLibro(int idLibro) {
-        	this.idLibro = idLibro; 
-        	return this; 
-        }
         
         public BuilderLibro setIsbn(String isbn) {
             this.isbn = isbn;

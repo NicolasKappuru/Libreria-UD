@@ -9,12 +9,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import modelo.DocumentoDTO.ArticuloDTO;
-import modelo.DocumentoDTO.PonenciaDTO;
 import modelo.persistencia.ConexionDB;
 
-public class ArticuloDAO implements DAO<ArticuloDTO>{
+public class ArticuloDAO{
 
-	@Override
+	
 	public void crear(ArticuloDTO articulo) throws SQLException {
 		String sql = "INSERT INTO articulo (ssn, documento) VALUES (?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
@@ -25,13 +24,13 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
 		}
 	}
 
-	@Override
+	
 	public ArticuloDTO buscarPorNombre(String nombre) throws SQLException{
 		//Aqui ponemos la logica
 		return null;
 	}
 
-	@Override
+	
 	public void eliminarPorID(int id) throws SQLException {
 	    String sqlArticulo = "DELETE FROM articulo WHERE idarticulo = ?";
 	    String sqlDocumento = "DELETE FROM documento WHERE iddocumento = " +
@@ -58,7 +57,7 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
 	}
 
 
-	@Override
+	
 	public void actualizar(ArticuloDTO articulo) throws SQLException {
 	    String sqlDocumento = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
 	                           "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
@@ -85,7 +84,6 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
 
 	            // 2️⃣ Luego, actualizar el Artículo
 	            pstmtArticulo.setString(1, articulo.getSsn());
-	            pstmtArticulo.setInt(2, articulo.getIdArticulo());
 	            pstmtArticulo.executeUpdate();
 
 	            conn.commit(); // Confirma los cambios
@@ -108,7 +106,6 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
         }
     }
 
-	@Override
 	public ArticuloDTO buscarPorId(int id) throws SQLException {
 	    String sql = "SELECT a.idarticulo, a.ssn, " +
 	                 "d.iddocumento, d.titulo, d.fechapublicacion, d.autores, " +
@@ -124,7 +121,6 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
 	            if (rs.next()) {
 	                System.out.println(rs.getString("titulo"));
 	                return new ArticuloDTO.BuilderArticulo()
-	                        .setIdArticulo(rs.getInt("idarticulo"))  // Datos de artículo
 	                        .setSsn(rs.getString("ssn"))
 	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados
 	                        .setTitulo(rs.getString("titulo"))

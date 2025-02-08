@@ -1,23 +1,15 @@
 package modelo.DocumentoDTO;
 
-import modelo.DocumentoDTO.ArticuloDTO.BuilderArticulo;
-
 public class PonenciaDTO extends DocumentoDTO {
 
     private static final long serialVersionUID = 1L;
-    private int idPonencia;
     private String congreso;
     private String isbn;
 
     public PonenciaDTO(BuilderPonencia builder) {
         super(builder);
-        this.idPonencia = builder.idPonencia;
         this.congreso = builder.congreso;
         this.isbn = builder.isbn;
-    }
-
-    public int getIdPonencia() {
-        return idPonencia;
     }
 
     public String getCongreso() {
@@ -34,14 +26,8 @@ public class PonenciaDTO extends DocumentoDTO {
     }
 
     public static class BuilderPonencia extends BuilderDoc {
-        private int idPonencia;
         private String congreso;
         private String isbn;
-
-        public BuilderPonencia setIdPonencia(int idPonencia) {
-            this.idPonencia = idPonencia;
-            return this;
-        }
 
         public BuilderPonencia setCongreso(String congreso) {
             this.congreso = congreso;

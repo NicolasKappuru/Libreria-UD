@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class UsuarioDTO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private int id;
 	private String nombre;
 	private String contrasena;
 	private String correoElectronico;
@@ -14,7 +13,6 @@ public class UsuarioDTO implements Serializable{
 	
 	
 	public UsuarioDTO(Builder builder) {
-		this.id = builder.id;
         this.nombre = builder.nombre;
         this.contrasena = builder.contrasena;
         this.correoElectronico = builder.correoElectronico;
@@ -22,7 +20,6 @@ public class UsuarioDTO implements Serializable{
         this.numeroTelefonico = builder.numeroTelefonico;
 	}
 	
-	public int getId() { return id; }
 	
 	public String getNombre() { return nombre; }
 	
@@ -36,13 +33,12 @@ public class UsuarioDTO implements Serializable{
 	
 	@Override
 	public String toString() {
-		return this.nombre + " " + this.id + " " + this.contrasena + " " + this.correoElectronico + " " + this.direccionFisica + " " +  this.numeroTelefonico;
+		return this.nombre + " " + this.contrasena + " " + this.correoElectronico + " " + this.direccionFisica + " " +  this.numeroTelefonico;
 	}
 	 
 	//Nuestro Builder para construir DTOs inmutables
 	public static class Builder {
         private String nombre;
-        private int id; 
         private String contrasena;
         private String correoElectronico;
         private String direccionFisica;
@@ -52,11 +48,7 @@ public class UsuarioDTO implements Serializable{
             this.nombre = nombre;
             return this;
         }
-        
-        public Builder setId(int value) {
-        	this.id = value; 
-        	return this; 
-        }
+       
 
         public Builder setContrasena(String contrasena) {
             this.contrasena = contrasena;

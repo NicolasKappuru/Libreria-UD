@@ -11,10 +11,10 @@ import java.text.SimpleDateFormat;
 import modelo.DocumentoDTO.DocumentoDTO;
 import modelo.persistencia.ConexionDB;
 
-public class DocumentoDAO implements DAO<DocumentoDTO>{
+public class DocumentoDAO{
 
-	@Override
-	public void crear(DocumentoDTO documento) throws SQLException {
+	public int crear(DocumentoDTO documento) throws SQLException {
+		
 		String sql = "INSERT INTO documento (titulo, fechapublicacion, autores, diapublicacion ,mespublicacion , editorial, estado, propietario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
 				PreparedStatement pstmt = conexion.prepareStatement(sql)){
@@ -27,16 +27,25 @@ public class DocumentoDAO implements DAO<DocumentoDTO>{
 			pstmt.setString(7, documento.getEstado());
 			pstmt.setInt(8, 11);
 			pstmt.executeUpdate();
-		}
-	}
+			int affectedRows = pstmt.executeUpdate();
+	        
+	        if (affectedRows > 0) {
+	            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+	                if (generatedKeys.next()) {
+	                    return generatedKeys.getInt(1);
+	                }
+	            }
+	        }
+	    }
+	    return -1;
+}
+	
 
-	@Override
 	public DocumentoDTO buscarPorNombre(String nombre) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void eliminarPorID(int id) throws SQLException {
 	    String sql = "DELETE FROM documento WHERE iddocumento = ?";
 	    try (Connection conn = ConexionDB.getInstance().getConnection();
@@ -46,7 +55,6 @@ public class DocumentoDAO implements DAO<DocumentoDTO>{
 	    }
 	}
 
-	@Override
 	public void actualizar(DocumentoDTO documento) throws SQLException {
 	    String sql = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
 	                 "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
@@ -79,7 +87,6 @@ public class DocumentoDAO implements DAO<DocumentoDTO>{
         }
     }
 
-    @Override
     public DocumentoDTO buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM documento WHERE iddocumento = ?";
         try (Connection conn = ConexionDB.getInstance().getConnection();

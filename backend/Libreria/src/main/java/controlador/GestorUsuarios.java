@@ -24,9 +24,6 @@ public class GestorUsuarios {
 	            case "nombre":  
 	            	usuario.setNombre(value);
 	                break;
-	            case "idusuario":
-	            	usuario.setId(Integer.parseInt(value)); 
-	            	break; 
 	            case "contrasena":
 	            	usuario.setContrasena(value);
 	                break;
@@ -87,12 +84,15 @@ public class GestorUsuarios {
 	public String obtenerUsuario(String usuario) {
 		try {
 			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
-			return "{"
-            + "\"nombre\":\"" + encontrado.getNombre() + "\","
-            + "\"correo\":\"" + encontrado.getCorreoElectronico() + "\","
-            + "\"direccion\":\"" + encontrado.getDireccionFisica() + "\","
-            + "\"telefono\":\"" + encontrado.getNumeroTelefonico() + "\""
-            + "}";
+			if(encontrado != null) {
+				return "{"
+			            + "\"nombre\":\"" + encontrado.getNombre() + "\","
+			            + "\"correo\":\"" + encontrado.getCorreoElectronico() + "\","
+			            + "\"direccion\":\"" + encontrado.getDireccionFisica() + "\","
+			            + "\"telefono\":\"" + encontrado.getNumeroTelefonico() + "\""
+			            + "}";
+			}
+			return null;
 		}catch (SQLException e) {
 			return "Error: "+e;
 		}

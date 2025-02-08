@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 public class DocumentoDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private int idDocumento; 
+	private int idDocumento;
+	private String tipo;
 	private String titulo; 
 	private String fechaPublicacion; 
 	private String autores; 
@@ -15,6 +16,7 @@ public class DocumentoDTO implements Serializable{
 	private String propietario; 
 	
 	public DocumentoDTO(BuilderDoc builder ) {
+		this.tipo = builder.tipo;
 		this.idDocumento = builder.idDocumento; 
 		this.titulo = builder.titulo; 
 		this.fechaPublicacion = builder.fechaPublicacion; 
@@ -25,6 +27,8 @@ public class DocumentoDTO implements Serializable{
 		this.estado = builder.estado; 
 		this.propietario = builder.propietario; 
 	}
+	
+	public String getTipo() { return tipo;}
 	
 	public int getIdDocumento() { return idDocumento;}
 	
@@ -52,6 +56,7 @@ public class DocumentoDTO implements Serializable{
 	
 	public static class BuilderDoc{
 		private int idDocumento;
+		private String tipo;
 		private String titulo; 
 		private String fechaPublicacion; 
 		private String autores; 
@@ -64,6 +69,11 @@ public class DocumentoDTO implements Serializable{
 		public BuilderDoc setIdDocumento(int idDocumento) { 
 			this.idDocumento = idDocumento; 
 			return this; 
+		}
+		
+		public BuilderDoc setTipo(String tipo){
+			this.tipo = tipo;
+			return this;
 		}
 		
 		public BuilderDoc setTitulo(String titulo) { 

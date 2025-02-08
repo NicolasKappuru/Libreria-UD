@@ -24,9 +24,7 @@ public class ApiMain {
 
 		//Prueba metodos de usuario
 		UsuarioDAO dao = new UsuarioDAO(); 
-		UsuarioDTO user = dao.buscarPorNombre("Nicolas");
-		System.out.println(user.toString());
-		UsuarioDTO user2 = dao.buscarPorId(15); 
+		UsuarioDTO user2 = dao.buscarPorId(1); 
 		System.out.println(user2.toString());
 		
 		//Prueba metodos de documento
@@ -54,12 +52,6 @@ public class ApiMain {
 				.setAutores("Nikokado - Hendich")
 				.setDiaPublicacion("Lunes")
 				.setEditorial("Colimun")
-				.setEstado("En reserva")
-				.setFechaPublicacion("2/2/2023")
-				.setMesPublicacion("Marzo")
-				.setTitulo("Cientist things")
-				.setPropietario("11")
-				.setSsn("A12345")
 				.setIdArticulo(1)
 				.build(); 
 		

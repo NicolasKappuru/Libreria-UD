@@ -46,7 +46,9 @@ public class ServletUsuario extends HttpServlet {
         String urlPath = request.getRequestURI().substring(request.getContextPath().length());
 
         if ("/usuario/registrar".equals(urlPath)) {
-            response.getWriter().write(gestor.registrarUsuario(keyValuePairs));
+        	String result= gestor.registrarUsuario(keyValuePairs);
+        	System.out.print(result);
+            response.getWriter().write(result);
         } else if ("/usuario/login".equals(urlPath)) {
             response.getWriter().write(gestor.loginUsuario(keyValuePairs));
         } else {

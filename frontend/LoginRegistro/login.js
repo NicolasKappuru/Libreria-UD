@@ -1,12 +1,12 @@
-const form = document.getElementById('formLogin');
-const submitBtn = document.getElementById('submitBtn');
+const form = document.getElementById('formLogin'); // Se guarda en una variable el contexto de esa variable.
+const submitBtn = document.getElementById('submitBtn'); // Se le da un ID diferente. 
 
-submitBtn.addEventListener('click', async () => {
+submitBtn.addEventListener('click', async () => { // REST
 
-    const formData = new FormData(form);
+    const formData = new FormData(form); // Se toma el formulario y se guarda la información de este.
     const data = {
         nombre: formData.get('nombre'),
-        contrasena: formData.get('contrasena')
+        contrasena: formData.get('contrasena') // Este es único del Login.
     };
 
     try {

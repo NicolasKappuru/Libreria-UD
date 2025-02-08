@@ -34,6 +34,11 @@ public class UsuarioDTO implements Serializable{
 
 	public String getNumeroTelefonico() { return numeroTelefonico; }	
 	
+	@Override
+	public String toString() {
+		return this.nombre + " " + this.id + " " + this.contrasena + " " + this.correoElectronico + " " + this.direccionFisica + " " +  this.numeroTelefonico;
+	}
+	 
 	//Nuestro Builder para construir DTOs inmutables
 	public static class Builder {
         private String nombre;

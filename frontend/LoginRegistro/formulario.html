@@ -10,14 +10,14 @@
     <!-- Encabezado -->
     <header>
         <h1>Librería UD</h1>
-        <p>Bienvenido, ingresa tus datos para registrarte</p> <!--Por si vamos a ingresar algo mas -->
+        <p>Bienvenido, ingresa tus datos para registrarte.</p> <!--Por si vamos a ingresar algo mas -->
     </header>
 
     <!-- Cuerpo -->
     <main>
         <div class="form-container">
             <h2>Ingrese los datos del nuevo usuario</h2>
-            <form action="ServletFormulario" method="POST">
+            <form action="ServletFormulario" method="POST" id="formRegister">
                 <div class="form-field">
                     <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
                 </div>
@@ -31,10 +31,10 @@
                     <input type="email" id="correoElectronico" name="correoElectronico" placeholder="Correo Electrónico" required>
                 </div>
                 <div class="form-field">
-                    <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña" required>
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
                 </div>
                 <div class="form-field">
-                    <button type="submit">Confirmar</button>
+                    <button type="submit" id="formSubmitBtn">Confirmar</button>
                 </div>
                 <div class="form-field volver">
                     <a href="login.html">Volver</a> <!-- Enlace para regresar a la página anterior -->
@@ -45,7 +45,8 @@
 
     <!-- Pie de página -->
     <footer>
-        <p>&copy; 2025 Librería UD. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Librería UD. Todos los derechos reservados. © </p>
     </footer>
+    <script src="registrar.js"></script>
 </body>
 </html>

@@ -1,6 +1,5 @@
 package controlador;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -32,36 +31,27 @@ public class ServletUsuario extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        StringBuilder jsonBuffer = new StringBuilder();
-        String line;
-        try (BufferedReader reader = request.getReader()) {
-            while ((line = reader.readLine()) != null) {
-                jsonBuffer.append(line);
-            }
-        }
-
-        String jsonString = jsonBuffer.toString();
-        jsonString = jsonString.replaceAll("[{}\"\\[\\]]", "");
-        String[] keyValuePairs = jsonString.split(",");
         String urlPath = request.getRequestURI().substring(request.getContextPath().length());
+        String jsonResponse;
 
         if ("/usuario/registrar".equals(urlPath)) {
-        	String result= gestor.registrarUsuario(keyValuePairs);
-        	System.out.print(result);
-            response.getWriter().write(result);
+            jsonResponse = gestor.registrarUsuario(request);
         } else if ("/usuario/login".equals(urlPath)) {
-            response.getWriter().write(gestor.loginUsuario(keyValuePairs));
+            jsonResponse = gestor.loginUsuario(request);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.getWriter().write("{\"message\": \"URL no encontrada\"}");
+            jsonResponse = "{\"mensaje\": \"URL no encontrada\"}";
         }
+
+        response.getWriter().write(jsonResponse);
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCORSHeaders(response);
         String usuario = (String) request.getAttribute("usuario");
-        response.getWriter().write(gestor.obtenerUsuario(usuario));
+        String jsonResponse = gestor.obtenerUsuario(usuario);
+        response.getWriter().write(jsonResponse);
     }
 
     // Método para agregar los encabezados CORS

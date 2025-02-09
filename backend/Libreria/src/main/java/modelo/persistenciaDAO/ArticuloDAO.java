@@ -11,15 +11,15 @@ import java.text.SimpleDateFormat;
 import modelo.DocumentoDTO.ArticuloDTO;
 import modelo.persistencia.ConexionDB;
 
-public class ArticuloDAO{
+public class ArticuloDAO implements DAO<ArticuloDTO>{
 
 	
 	public void crear(ArticuloDTO articulo) throws SQLException {
-		String sql = "INSERT INTO articulo (ssn, documento) VALUES (?, ?)";
+		String sql = "INSERT INTO articulo (iddocumento, ssn) VALUES (?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
 			PreparedStatement pstmt = conexion.prepareStatement(sql)){
-			pstmt.setString(1, articulo.getSsn());
-			pstmt.setInt(2, 4);
+			pstmt.setInt(1, articulo.getIdDocumento());
+			pstmt.setString(2, articulo.getSsn());
 			pstmt.executeUpdate();
 		}
 	}
@@ -58,33 +58,17 @@ public class ArticuloDAO{
 
 
 	
-	public void actualizar(ArticuloDTO articulo) throws SQLException {
-	    String sqlDocumento = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
-	                           "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
-	    
-	    String sqlArticulo = "UPDATE articulo SET ssn = ? WHERE idarticulo = ?";
+	public void actualizar(ArticuloDTO articulo) throws SQLException {	    
+	    String sqlArticulo = "UPDATE articulo SET ssn = ? WHERE iddocumento = ?";
 
 	    try (Connection conn = ConexionDB.getInstance().getConnection()) {
-	        conn.setAutoCommit(false); // Inicia transacción
+	        conn.setAutoCommit(false);
 
-	        try (PreparedStatement pstmtDocumento = conn.prepareStatement(sqlDocumento);
-	             PreparedStatement pstmtArticulo = conn.prepareStatement(sqlArticulo)) {
+	        try (PreparedStatement pstmt = conn.prepareStatement(sqlArticulo)) {
 
-	            // 1️⃣ Actualizar primero el Documento
-	            pstmtDocumento.setString(1, articulo.getTitulo());
-	            pstmtDocumento.setDate(2, convertirStringADate(articulo.getFechaPublicacion()));
-	            pstmtDocumento.setString(3, articulo.getAutores());
-	            pstmtDocumento.setString(4, articulo.getDiaPublicacion());
-	            pstmtDocumento.setString(5, articulo.getMesPublicacion());
-	            pstmtDocumento.setString(6, articulo.getEditorial());
-	            pstmtDocumento.setString(7, articulo.getEstado());
-	            pstmtDocumento.setInt(8, Integer.parseInt(articulo.getPropietario()));
-	            pstmtDocumento.setInt(9, articulo.getIdDocumento());
-	            pstmtDocumento.executeUpdate();
-
-	            // 2️⃣ Luego, actualizar el Artículo
-	            pstmtArticulo.setString(1, articulo.getSsn());
-	            pstmtArticulo.executeUpdate();
+	        	pstmt.setString(1, articulo.getSsn());
+	        	pstmt.setInt(2, articulo.getIdDocumento());
+	        	pstmt.executeUpdate();
 
 	            conn.commit(); // Confirma los cambios
 	        } catch (SQLException e) {

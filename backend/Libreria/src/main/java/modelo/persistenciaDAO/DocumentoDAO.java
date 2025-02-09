@@ -14,37 +14,37 @@ import modelo.persistencia.ConexionDB;
 public class DocumentoDAO{
 
 	public int crear(DocumentoDTO documento) throws SQLException {
-		
-		String sql = "INSERT INTO documento (titulo, fechapublicacion, autores, diapublicacion ,mespublicacion , editorial, estado, propietario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		try(Connection conexion = ConexionDB.getInstance().getConnection();
-				PreparedStatement pstmt = conexion.prepareStatement(sql)){
-			pstmt.setString(1, documento.getTitulo());
-			pstmt.setDate(2, convertirStringADate(documento.getFechaPublicacion()));
-			pstmt.setString(3, documento.getAutores());
-			pstmt.setString(4, documento.getDiaPublicacion());
-			pstmt.setString(5, documento.getMesPublicacion());
-			pstmt.setString(6, documento.getEditorial());
-			pstmt.setString(7, documento.getEstado());
-			pstmt.setInt(8, 11);
-			pstmt.executeUpdate();
-			int affectedRows = pstmt.executeUpdate();
-	        
-	        if (affectedRows > 0) {
-	            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-	                if (generatedKeys.next()) {
-	                    return generatedKeys.getInt(1);
-	                }
+	    String sql = "INSERT INTO documento (titulo, fechapublicacion, autores, diapublicacion, mespublicacion, editorial, estado, propietario, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING iddocumento";
+
+	    try (Connection conexion = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+
+	        pstmt.setString(1, documento.getTitulo());
+	        if (!documento.getFechaPublicacion().isEmpty()) {
+	            pstmt.setDate(2, java.sql.Date.valueOf(documento.getFechaPublicacion()));
+	        } else {
+	            pstmt.setNull(2, java.sql.Types.DATE);
+	        }
+	        pstmt.setString(3, documento.getAutores());
+	        pstmt.setString(4, documento.getDiaPublicacion());
+	        pstmt.setString(5, documento.getMesPublicacion());
+	        pstmt.setString(6, documento.getEditorial());
+	        pstmt.setString(7, documento.getEstado());
+	        pstmt.setString(8, documento.getPropietario());
+	        pstmt.setString(9, documento.getTipo());
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt(1); 
+	            } else {
+	                throw new SQLException("No se pudo obtener el ID generado.");
 	            }
 	        }
 	    }
-	    return -1;
-}
-	
-
-	public DocumentoDTO buscarPorNombre(String nombre) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
 	}
+	   
+
+
 
 	public void eliminarPorID(int id) throws SQLException {
 	    String sql = "DELETE FROM documento WHERE iddocumento = ?";
@@ -57,20 +57,23 @@ public class DocumentoDAO{
 
 	public void actualizar(DocumentoDTO documento) throws SQLException {
 	    String sql = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
-	                 "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
+	                 "mespublicacion = ?, editorial = ?, estado = ? WHERE iddocumento = ?";
 	    
 	    try (Connection conn = ConexionDB.getInstance().getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 	        pstmt.setString(1, documento.getTitulo());
-	        pstmt.setDate(2, convertirStringADate(documento.getFechaPublicacion()));
+	        if (!documento.getFechaPublicacion().isEmpty()) {
+	            pstmt.setDate(2, java.sql.Date.valueOf(documento.getFechaPublicacion()));
+	        } else {
+	            pstmt.setNull(2, java.sql.Types.DATE);
+	        }
 	        pstmt.setString(3, documento.getAutores());
 	        pstmt.setString(4, documento.getDiaPublicacion());
 	        pstmt.setString(5, documento.getMesPublicacion());
 	        pstmt.setString(6, documento.getEditorial());
 	        pstmt.setString(7, documento.getEstado());
-	        pstmt.setInt(8, Integer.parseInt(documento.getPropietario()));
-	        pstmt.setInt(9, documento.getIdDocumento()); // Se usa el ID del objeto DTO
+	        pstmt.setInt(8, documento.getIdDocumento());
 			pstmt.executeUpdate();
 	    }
 	}

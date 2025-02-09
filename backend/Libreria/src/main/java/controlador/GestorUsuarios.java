@@ -1,100 +1,107 @@
 package controlador;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import modelo.persistencia.UsuarioDAO;
 import modelo.persistencia.UsuarioDTO;
+import modelo.Usuario;
 
 public class GestorUsuarios {
-	
-	private UsuarioDAO usuarioDAO;
-	
-	public GestorUsuarios() {
-		usuarioDAO = new UsuarioDAO();
-	}
+    private UsuarioDAO usuarioDAO;
+    private ObjectMapper objectMapper;
 
-	public UsuarioDTO construirUsuario(String[] info) {
-		UsuarioDTO.Builder usuario = new UsuarioDTO.Builder();
-	    
-	    for (String pair : info) {
-	        String[] entry = pair.split(":");
-	        String key = entry[0].trim();
-	        String value = entry[1].trim();
-	        switch (key) {
-	            case "nombre":  
-	            	usuario.setNombre(value);
-	                break;
-	            case "contrasena":
-	            	usuario.setContrasena(value);
-	                break;
-	            case "correo":
-	            	usuario.setCorreoElectronico(value);
-	                break;
-	            case "direccion":
-	                usuario.setDireccionFisica(value);
-	                break;
-	            case "telefono":
-	            	usuario.setNumeroTelefonico(value);
-	                break;
-	        }
+    public GestorUsuarios() {
+        usuarioDAO = new UsuarioDAO();
+        objectMapper = new ObjectMapper(); // Jackson para convertir JSON
+    }
+
+    public String registrarUsuario(HttpServletRequest request) throws JsonProcessingException {
+        try {
+            Usuario usuario = objectMapper.readValue(request.getReader(), Usuario.class);
+            System.out.println("Usuario recibido: " + usuario);
+            UsuarioDTO usuarioDTO = new UsuarioDTO.Builder()
+            	    .setNombre(usuario.getNombre())
+            	    .setCorreoElectronico(usuario.getCorreoElectronico())
+            	    .setDireccionFisica(usuario.getDireccionFisica())
+            	    .setNumeroTelefonico(usuario.getNumeroTelefonico())
+            	    .setContrasena(usuario.getContrasena())
+            	    .build();
+            UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario.getNombre());
+            if (encontrado == null) {
+                usuarioDAO.crear(usuarioDTO);
+                return "{\"mensaje\": \"Creado\"}";
+            } else {
+                return "{\"mensaje\": \"Nombre de usuario ya existe\"}";
+            }
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
         }
-	    return usuario.build();
-	}
-	
-	public String registrarUsuario(String[] info){
-		
-		UsuarioDTO usuario = construirUsuario(info);
-		try {
-			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario.getNombre());
-			if(encontrado == null) {
-				try {
-					usuarioDAO.crear(usuario);
-					return "{\"mensaje\": \"Creado\"}";
-				} catch (SQLException e) {
-					return "{\"mensaje\": \"Error\"}";
-				}
-			}else {
-				return "{\"mensaje\": \"Nombre de usuario ya existe\"}";
-			}
-		} catch (SQLException e) {
-			return "{\"mensaje\": \"Error: " +e+"\"}";
-		}
-		
-	}
-	
-	public String loginUsuario(String[] info) {
-		
-		UsuarioDTO usuario = construirUsuario(info);
-		try {
-			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario.getNombre());
-			if(encontrado != null) {
-				if(usuario.getContrasena().equals(encontrado.getContrasena())) {
-					return "{\"token\": \""+JwtUtil.generarToken(usuario.getNombre())+"\"}";
-				}else {
-					return "{\"token\": \"Contraseña invalida\"}";
-				}
-			}else {
-				return "{\"token\": \"Nombre de usuario no existe\"}";
-			}
-		} catch (SQLException e) {
-			return "{\"token\": \"Error: " +e+"\"}";
-		}
-	}
-	
-	public String obtenerUsuario(String usuario) {
-		try {
-			UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
-			if(encontrado != null) {
-				return "{"
-			            + "\"nombre\":\"" + encontrado.getNombre() + "\","
-			            + "\"correo\":\"" + encontrado.getCorreoElectronico() + "\","
-			            + "\"direccion\":\"" + encontrado.getDireccionFisica() + "\","
-			            + "\"telefono\":\"" + encontrado.getNumeroTelefonico() + "\""
-			            + "}";
-			}
-			return null;
-		}catch (SQLException e) {
-			return "Error: "+e;
-		}
-	}
+    }
+
+    public String loginUsuario(HttpServletRequest request) throws JsonProcessingException {
+        try {
+            Usuario usuario = objectMapper.readValue(request.getReader(), Usuario.class);
+            UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario.getNombre());
+
+            if (encontrado != null) {
+                if (usuario.getContrasena().equals(encontrado.getContrasena())) {
+                    return "{\"token\": \"" + JwtUtil.generarToken(usuario.getNombre()) + "\"}";
+                } else {
+                    return "{\"mensaje\": \"Contraseña inválida\"}";
+                }
+            } else {
+                return "{\"mensaje\": \"Nombre de usuario no existe\"}";
+            }
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+    }
+    
+    public String obtenerUsuario(String usuario) throws JsonProcessingException {
+        try {
+            UsuarioDTO encontrado = usuarioDAO.buscarPorNombre(usuario);
+            
+            if (encontrado != null) {
+                Usuario usuarioObj = new Usuario();
+                usuarioObj.setNombre(encontrado.getNombre());
+                usuarioObj.setCorreoElectronico(encontrado.getCorreoElectronico());
+                usuarioObj.setDireccionFisica(encontrado.getDireccionFisica());
+                usuarioObj.setNumeroTelefonico(encontrado.getNumeroTelefonico());
+
+                return objectMapper.writeValueAsString(usuarioObj);
+            }
+            return null; 
+        } catch (SQLException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+            
+            try {
+                return objectMapper.writeValueAsString(errorResponse);
+            } catch (IOException ioException) {
+                return "{\"mensaje\": \"Error al procesar JSON\"}";
+            }
+        }
+    }
 }

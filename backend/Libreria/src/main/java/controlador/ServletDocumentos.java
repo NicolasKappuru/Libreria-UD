@@ -1,6 +1,5 @@
 package controlador;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -39,17 +38,20 @@ public class ServletDocumentos extends HttpServlet{
     	setCORSHeaders(response);
     	response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        StringBuilder jsonBuffer = new StringBuilder();
-        String line;
-        try (BufferedReader reader = request.getReader()) {
-            while ((line = reader.readLine()) != null) {
-                jsonBuffer.append(line);
-            }
-        }
-        String jsonString = jsonBuffer.toString();
-        jsonString = jsonString.replaceAll("[{}\"\\[\\]]", "");
-        String[] keyValuePairs = jsonString.split(",");
+        
+        String urlPath = request.getRequestURI().substring(request.getContextPath().length());
+        String jsonResponse;
         String usuario = (String) request.getAttribute("usuario");
-        response.getWriter().write(gestor.crearDocumento(keyValuePairs, usuario));
+        if ("/documento/crear".equals(urlPath)) {
+            jsonResponse = gestor.crearDocumento(request, usuario);
+        }else if("/documento/modificar".equals(urlPath)) {
+        	jsonResponse = gestor.modificarDocumento(request, usuario);
+        }
+        else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            jsonResponse = "{\"mensaje\": \"URL no encontrada\"}";
+        }
+
+        response.getWriter().write(jsonResponse);
     }
 }

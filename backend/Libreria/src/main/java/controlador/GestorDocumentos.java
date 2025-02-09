@@ -1,124 +1,158 @@
 package controlador;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import modelo.Documento;
 import modelo.DocumentoDTO.ArticuloDTO;
 import modelo.DocumentoDTO.DocumentoDTO;
+import modelo.DocumentoDTO.DocumentoFactory;
 import modelo.DocumentoDTO.LibroDTO;
 import modelo.DocumentoDTO.PonenciaDTO;
+import modelo.FactoryDAO.FabricaDAO;
+import modelo.persistenciaDAO.ArticuloDAO;
 import modelo.persistenciaDAO.DocumentoDAO;
+import modelo.persistenciaDAO.LibroDAO;
+import modelo.persistenciaDAO.PonenciaDAO;
 
 public class GestorDocumentos {
 	
 	private DocumentoDAO documentoDAO;
-	
+	private ObjectMapper objectMapper;
+	private FabricaDAO fabrica;
 	
 	public GestorDocumentos() {
 		documentoDAO = new DocumentoDAO();
+		fabrica = new FabricaDAO();
+		objectMapper = new ObjectMapper();
 	}
 	
-	public DocumentoDTO construirDocumento(String[] info, String usuario) {
-	    String tipo = null;
-	    String titulo = null;
-	    String fechaPublicacion = null;
-	    String mes = null;
-	    String dia = null;
-	    String autores = null;
-	    String editorial = null;
-	    String ssn = null;
-	    String isbn = null;
-	    String numPaginas = null;
-	    String nombreCongreso = null;
-	    for (String pair : info) {
-	        String[] entry = pair.split(":");
-	        String key = entry[0].trim();
-	        String value = entry[1].trim();
-	        switch (key) {
-	            case "tipo":  
-	            	tipo = value;
-	                break;
-	            case "titulo":
-	            	titulo = value;
-	            	break; 
-	            case "fechaPublicacion":
-	            	fechaPublicacion = value;
-	            	LocalDate fecha = LocalDate.parse(value, DateTimeFormatter.ISO_LOCAL_DATE);
-	            	mes  = String.valueOf(fecha.getMonth());
-	            	dia = String.valueOf(fecha.getDayOfMonth());
-	                break;
-	            case "autores":
-	            	autores = value;
-	                break;
-	            case "editorial":
-	            	editorial = value;
-	                break;
-	            case "isbn":
-	            	isbn = value;
-	                break;
-	            case "numPaginas":
-	            	numPaginas = value;
-	                break;
-	            case "nombreCongreso":
-	            	nombreCongreso = value;
-	                break;
-	            case "ssn":
-	            	ssn = value;
-	                break;    
-	        }
-        }
-	    
-	    if(tipo.equals("libro")) {
-	    	LibroDTO.BuilderLibro libro = new LibroDTO.BuilderLibro();
-	    	return libro.setIsbn(isbn)
-	    	.setNumeroPaginas(numPaginas)
-	    	.setTitulo(titulo)
-	    	.setTipo(tipo)
-	    	.setFechaPublicacion(fechaPublicacion)
-	    	.setMesPublicacion(mes)
-	    	.setDiaPublicacion(dia)
-	    	.setAutores(autores)
-	    	.setEditorial(editorial)
-	    	.setPropietario(usuario)
-	    	.build();
-	    	
-	    	
-	    }else if(tipo.equals("ponencia")){
-	    	PonenciaDTO.BuilderPonencia ponencia = new PonenciaDTO.BuilderPonencia();
-	    	return ponencia.setIsbn(isbn)
-	    	.setCongreso(nombreCongreso)
-	    	.setTitulo(titulo)
-	    	.setTipo(tipo)
-	    	.setFechaPublicacion(fechaPublicacion)
-	    	.setMesPublicacion(mes)
-	    	.setDiaPublicacion(dia)
-	    	.setAutores(autores)
-	    	.setEditorial(editorial)
-	    	.setPropietario(usuario)
-	    	.build();
-	    	
-	    }else {
-	    	ArticuloDTO.BuilderArticulo articulo = new ArticuloDTO.BuilderArticulo();
-	    	return articulo.setSsn(ssn)
-	    	.setTitulo(titulo)
-	    	.setTipo(tipo)
-	    	.setFechaPublicacion(fechaPublicacion)
-	    	.setMesPublicacion(mes)
-	    	.setDiaPublicacion(dia)
-	    	.setAutores(autores)
-	    	.setEditorial(editorial)
-	    	.setPropietario(usuario)
-	    	.build();
-	    }
-	}
-	
-	public String crearDocumento(String[] info, String usuario) {
-		DocumentoDTO documento = construirDocumento(info, usuario);
-		try{
-			return "{\"id\": \"" + documentoDAO.crear(documento) + "\"}";
-		}catch (SQLException e) {
-			return "{\"mensaje\": \"Error: " +e+"\"}";
+	public DocumentoDTO.BuilderDoc construirBuilder(Documento documento, String usuario){
+		String mes = "";
+        String dia = "";
+		if(!documento.getFechaPublicacion().isEmpty()) {
+			LocalDate fecha = LocalDate.parse(documento.getFechaPublicacion(), DateTimeFormatter.ISO_LOCAL_DATE);
+	        mes = String.valueOf(fecha.getMonthValue());
+	        dia = String.valueOf(fecha.getDayOfMonth());
 		}
+		return DocumentoFactory.getBuilder(documento.getTipo())
+        	    .setTitulo(documento.getTitulo())
+        	    .setFechaPublicacion(documento.getFechaPublicacion())
+        	    .setAutores(documento.getAutores())
+        	    .setEditorial(documento.getEditorial())
+        	    .setEstado("Disponible")
+        	    .setTipo(documento.getTipo())
+        	    .setPropietario(usuario)
+        	    .setMesPublicacion(mes)
+        	    .setDiaPublicacion(dia)
+        	    .setIdDocumento(documento.getIddocumento());
+	}
+	
+	public ArticuloDTO crearArticulo(DocumentoDTO.BuilderDoc builder, Documento documento) {
+		return ((ArticuloDTO.BuilderArticulo) builder)
+				.setSsn(documento.getSsn())
+				.setIdDocumento(documento.getIddocumento())
+				.build();
+	}
+	
+	public LibroDTO crearLibro(DocumentoDTO.BuilderDoc builder, Documento documento) {
+		return ((LibroDTO.BuilderLibro) builder)
+				.setNumeroPaginas(documento.getNumPaginas())
+				.setIsbn(documento.getIsbn())
+				.setIdDocumento(documento.getIddocumento())
+				.build();
+	}
+	
+	public PonenciaDTO crearPonencia(DocumentoDTO.BuilderDoc builder, Documento documento) {
+		return ((PonenciaDTO.BuilderPonencia) builder)
+				.setCongreso(documento.getNombreCongreso())
+				.setIsbn(documento.getIsbn())
+				.setIdDocumento(documento.getIddocumento())
+				.build();
+	}
+	
+	public String crearDocumento(HttpServletRequest request, String usuario) throws JsonProcessingException {
+		
+		try {
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+			
+			DocumentoDTO.BuilderDoc builder = construirBuilder(documento, usuario);
+			
+			int iddocumento = documentoDAO.crear(builder.build());
+			documento.setIddocumento(iddocumento);
+			
+			if(builder instanceof ArticuloDTO.BuilderArticulo) {
+				ArticuloDTO articulo = crearArticulo(builder, documento);
+				ArticuloDAO dao = fabrica.crearArticulo();
+				dao.crear(articulo);
+			}else if(builder instanceof LibroDTO.BuilderLibro) {
+				LibroDTO libro = crearLibro(builder, documento);
+				LibroDAO dao = fabrica.crearLibro();
+				dao.crear(libro);
+			}else if(builder instanceof PonenciaDTO.BuilderPonencia) {
+				PonenciaDTO ponencia = crearPonencia(builder, documento);
+				PonenciaDAO dao = fabrica.crearPonencia();
+				dao.crear(ponencia);
+			}
+			
+            return "{\"mensaje\": \""+iddocumento+"\"}";
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+		
+	}
+	
+	public String modificarDocumento(HttpServletRequest request, String usuario) throws JsonProcessingException {
+		
+		try {
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+			
+			DocumentoDTO.BuilderDoc builder = construirBuilder(documento, usuario);
+			
+			documentoDAO.actualizar(builder.build());
+			
+			if(builder instanceof ArticuloDTO.BuilderArticulo) {
+				ArticuloDTO articulo = crearArticulo(builder, documento);
+				ArticuloDAO dao = fabrica.crearArticulo();
+				dao.actualizar(articulo);
+			}else if(builder instanceof LibroDTO.BuilderLibro) {
+				LibroDTO libro = crearLibro(builder, documento);
+				LibroDAO dao = fabrica.crearLibro();
+				dao.actualizar(libro);
+			}else if(builder instanceof PonenciaDTO.BuilderPonencia) {
+				PonenciaDTO ponencia = crearPonencia(builder, documento);
+				PonenciaDAO dao = fabrica.crearPonencia();
+				dao.actualizar(ponencia);
+			}
+			
+            return "{\"mensaje\": \"Actualizado\"}";
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
+        }
 	}
 }

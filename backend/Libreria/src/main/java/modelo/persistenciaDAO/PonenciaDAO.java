@@ -15,12 +15,12 @@ public class PonenciaDAO implements DAO<PonenciaDTO>{
 
 	@Override
 	public void crear(PonenciaDTO ponencia) throws SQLException {
-		String sql = "INSERT INTO ponencia (congreso, isbn, documento) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO ponencia (iddocumento, congreso, isbn) VALUES (?, ?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
 			PreparedStatement pstmt = conexion.prepareStatement(sql)){
-			pstmt.setString(1, ponencia.getCongreso());
-			pstmt.setString(2, ponencia.getIsbn());
-			pstmt.setInt(3, 4);
+			pstmt.setInt(1, ponencia.getIdDocumento());
+			pstmt.setString(2, ponencia.getCongreso());
+			pstmt.setString(3, ponencia.getIsbn());
 			pstmt.executeUpdate();
 			
 		}
@@ -61,31 +61,18 @@ public class PonenciaDAO implements DAO<PonenciaDTO>{
 
 	@Override
 	public void actualizar(PonenciaDTO ponencia) throws SQLException {
-	    String sqlDocumento = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
-	                           "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
-	    
-	    String sqlPonencia = "UPDATE ponencia SET congreso = ?, isbn = ? WHERE idponencia = ?";
+	  
+	    String sqlPonencia = "UPDATE ponencia SET congreso = ?, isbn = ? WHERE iddocumento = ?";
 
 	    try (Connection conn = ConexionDB.getInstance().getConnection()) {
 	        conn.setAutoCommit(false); 
 
-	        try (PreparedStatement pstmtDocumento = conn.prepareStatement(sqlDocumento);
-	             PreparedStatement pstmtPonencia = conn.prepareStatement(sqlPonencia)) {
-
-	            pstmtDocumento.setString(1, ponencia.getTitulo());
-	            pstmtDocumento.setDate(2, convertirStringADate(ponencia.getFechaPublicacion()));
-	            pstmtDocumento.setString(3, ponencia.getAutores());
-	            pstmtDocumento.setString(4, ponencia.getDiaPublicacion());
-	            pstmtDocumento.setString(5, ponencia.getMesPublicacion());
-	            pstmtDocumento.setString(6, ponencia.getEditorial());
-	            pstmtDocumento.setString(7, ponencia.getEstado());
-	            pstmtDocumento.setInt(8, Integer.parseInt(ponencia.getPropietario()));
-	            pstmtDocumento.setInt(9, ponencia.getIdDocumento());
-	            pstmtDocumento.executeUpdate();
+	        try (PreparedStatement pstmt = conn.prepareStatement(sqlPonencia)) {
 	            
-	            pstmtPonencia.setString(1, ponencia.getCongreso());
-	            pstmtPonencia.setString(2, ponencia.getIsbn());
-	            pstmtPonencia.executeUpdate();
+	        	pstmt.setString(1, ponencia.getCongreso());
+	            pstmt.setString(2, ponencia.getIsbn());
+	            pstmt.setInt(3, ponencia.getIdDocumento());
+	            pstmt.executeUpdate();
 	        
 	            conn.commit();
 	        } catch (SQLException e) {

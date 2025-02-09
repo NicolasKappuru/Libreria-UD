@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     .then(data => {
         insertarDato("nombre", data.nombre);
-        insertarDato("correo", data.correo);
-        insertarDato("direccion", data.direccion);
-        insertarDato("telefono", data.telefono);
+        insertarDato("correo", data.correoElectronico);
+        insertarDato("direccion", data.direccionFisica);
+        insertarDato("telefono", data.numeroTelefonico);
     })
     .catch(error => {
         console.error('Error:', error);

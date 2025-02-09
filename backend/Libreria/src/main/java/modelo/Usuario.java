@@ -4,6 +4,7 @@ public class Usuario {
 	
 	private int id;
 	private String nombre;
+	private String contrasena;
 	private String correoElectronico;
 	private String direccionFisica;
 	private String numeroTelefonico;
@@ -12,23 +13,16 @@ public class Usuario {
 		
 	}
 
-	public Usuario(int id, String nombre, String correoElectronico, String direccionFisica, String numeroTelefonico) {
-		this.id = id;
-		this.nombre = nombre;
-		this.correoElectronico = correoElectronico;
-		this.direccionFisica = direccionFisica;
-		this.numeroTelefonico = numeroTelefonico;
-	}
-
-	public Usuario(String nombre, String correoElectronico, String direccionFisica, String numeroTelefonico) {
-		this.nombre = nombre;
-		this.correoElectronico = correoElectronico;
-		this.direccionFisica = direccionFisica;
-		this.numeroTelefonico = numeroTelefonico;
-	}
-
 	public int getId() {
 		return id;
+	}
+
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 
 	public void setId(int id) {

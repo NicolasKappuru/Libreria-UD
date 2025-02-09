@@ -2,9 +2,6 @@ package modelo.OtrosDTO;
 
 import java.io.Serializable;
 
-import modelo.DocumentoDTO.DocumentoDTO;
-import modelo.persistencia.UsuarioDTO;
-
 public class EventoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     

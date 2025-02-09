@@ -15,7 +15,7 @@
             <p>Ingrese los datos del documento</p>
             <form id="formDoc">
                 <div class="form-field">
-                    <select id="tipoDocumento" name="tipoDocumento" onchange="mostrarCampos()" required>
+                    <select id="tipoDocumento" name="tipoDocumento" onchange="activarCampos()">
                         <option value="">Seleccione el tipo de documento</option>
                         <option value="libro">Libro</option>
                         <option value="ponencia">Ponencia</option>
@@ -23,31 +23,31 @@
                     </select>
                 </div>
                 <div class="form-field">
-                    <input type="text" id="titulo" name="titulo" placeholder="Título" required>
+                    <input type="text" id="titulo" name="titulo" placeholder="Título" disabled>
                 </div>
                 <div class="form-field">
-                    <input type="date" id="fechaPublicacion" name="fechaPublicacion" required>
+                    <input type="date" id="fechaPublicacion" name="fechaPublicacion" disabled>
                 </div>
                 <div class="form-field">
-                    <input type="text" id="autores" name="autores" placeholder="Autores" required>
+                    <input type="text" id="autores" name="autores" placeholder="Autores" disabled>
                 </div>
                 <div class="form-field">
-                    <input type="text" id="editorial" name="editorial" placeholder="Editorial" required>
+                    <input type="text" id="editorial" name="editorial" placeholder="Editorial" disabled>
                 </div>
                 <div class="form-field" id="campoISBN" style="display: none;">
-                    <input type="text" id="isbn" name="isbn" placeholder="ISBN">
+                    <input type="text" id="isbn" name="isbn" placeholder="ISBN" disabled>
                 </div>
                 <div class="form-field" id="campoPaginas" style="display: none;">
-                    <input type="number" id="numPaginas" name="numPaginas" placeholder="Número de Páginas">
+                    <input type="number" id="numPaginas" name="numPaginas" placeholder="Número de Páginas" disabled>
                 </div>
                 <div class="form-field" id="campoCongreso" style="display: none;">
-                    <input type="text" id="nombreCongreso" name="nombreCongreso" placeholder="Nombre del Congreso">
+                    <input type="text" id="nombreCongreso" name="nombreCongreso" placeholder="Nombre del Congreso" disabled>
                 </div>
                 <div class="form-field" id="campoSSN" style="display: none;">
-                    <input type="text" id="ssn" name="ssn" placeholder="SSN">
+                    <input type="text" id="ssn" name="ssn" placeholder="SSN" disabled>
                 </div>
                 <div class="form-field">
-                    <button type="submit" id="submitBtn">Confirmar</button>
+                    <button id="submitBtn" disabled>Confirmar</button>
                 </div>
             </form>
         </div>

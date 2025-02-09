@@ -1,44 +1,40 @@
 const regForm = document.getElementById("formRegister");
 const regSubmitBtn = document.getElementById("formSubmitBtn")
-const controller = new AbortController();
-const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos
-regSubmitBtn.addEventListener('click', async () => {
+
+regSubmitBtn.addEventListener('click', function() {
     
     const regFormData = new FormData(regForm);
     const regData = {
         nombre: regFormData.get('nombre'),
-        telefono: regFormData.get('telefono'),
-        direccion: regFormData.get('direccion'),
-        correo: regFormData.get('correoElectronico'),
+        numeroTelefonico: regFormData.get('telefono'),
+        direccionFisica: regFormData.get('direccion'),
+        correoElectronico: regFormData.get('correoElectronico'),
         contrasena: regFormData.get('contrasena')
     };
-    
-    try {
-        const response = await fetch('http://localhost:8080/Libreria/usuario/registrar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(regData),
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-        const responseText = await response.text();
-        
-        try {
-            const result = JSON.parse(responseText); // Intentar parsear la respuesta como JSON
-            if(["Creado"].includes(result["mensaje"])){
-                alert(result["mensaje"]);
-                location.replace("login.html");
-            }else{
-                alert(result["mensaje"]);
-            }
-        } catch (error) {
-            alert('Error al analizar el JSON: ' + error.message);
+    fetch('http://localhost:8080/Libreria/usuario/registrar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(regData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
         }
-    } catch (error) {
-        alert('Error al conectar con el servidor: ' + error.message);
-    }
+        return response.json(); // Convertir la respuesta a JSON
+    })
+    .then(data => {
+        if(data.mensaje === "Creado"){
+            alert("Usuario creado exitosamente");
+            location.replace("login.html");
+        }    
+        else{
+            alert(data.mensaje);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
     
 });

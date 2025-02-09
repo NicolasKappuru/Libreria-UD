@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Claims;
 
-@WebFilter({"/usuario/datos", "/documento/crear"})
+@WebFilter({"/usuario/datos", "/documento/crear", "/documento/modificar"})
 public class JwtFiltro implements Filter {
     
     @Override

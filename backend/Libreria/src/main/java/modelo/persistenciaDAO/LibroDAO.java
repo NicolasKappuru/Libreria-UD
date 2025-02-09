@@ -11,15 +11,21 @@ import java.text.SimpleDateFormat;
 import modelo.DocumentoDTO.LibroDTO;
 import modelo.persistencia.ConexionDB;
 
-public class LibroDAO{
+public class LibroDAO implements DAO<LibroDTO>{
 
 	public void crear(LibroDTO libro) throws SQLException {
-		String sql = "INSERT INTO libro (numeropaginas, isbn, documento) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO libro (iddocumento, numeropaginas, isbn) VALUES (?, ?, ?)";
 		try(Connection conexion = ConexionDB.getInstance().getConnection();
 			PreparedStatement pstmt = conexion.prepareStatement(sql)){
-			pstmt.setInt(1, Integer.parseInt(libro.getNumeroPaginas()));
-			pstmt.setString(2, libro.getIsbn());
-			pstmt.setInt(3, 4);
+			
+			pstmt.setInt(1, libro.getIdDocumento());
+			if (!libro.getNumeroPaginas().isEmpty()) {
+				pstmt.setInt(2, Integer.parseInt(libro.getNumeroPaginas()));
+	        } else {
+	        	pstmt.setNull(2, java.sql.Types.INTEGER);
+	        }
+			
+			pstmt.setString(3, libro.getIsbn());
 			pstmt.executeUpdate();
 		}
 	}
@@ -57,31 +63,22 @@ public class LibroDAO{
 
 
 	public void actualizar(LibroDTO libro) throws SQLException {
-	    String sqlDocumento = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
-	                           "mespublicacion = ?, editorial = ?, estado = ?, propietario = ? WHERE iddocumento = ?";
 	    
-	    String sqlLibro = "UPDATE libro SET isbn = ?, numeropaginas = ? WHERE idlibro = ?";
+	    String sqlLibro = "UPDATE libro SET isbn = ?, numeropaginas = ? WHERE iddocumento = ?";
 
 	    try (Connection conn = ConexionDB.getInstance().getConnection()) {
 	        conn.setAutoCommit(false); 
 
-	        try (PreparedStatement pstmtDocumento = conn.prepareStatement(sqlDocumento);
-	             PreparedStatement pstmtLibro = conn.prepareStatement(sqlLibro)) {
+	        try (PreparedStatement pstmt = conn.prepareStatement(sqlLibro)) {
 
-	            pstmtDocumento.setString(1, libro.getTitulo());
-	            pstmtDocumento.setDate(2, convertirStringADate(libro.getFechaPublicacion()));
-	            pstmtDocumento.setString(3, libro.getAutores());
-	            pstmtDocumento.setString(4, libro.getDiaPublicacion());
-	            pstmtDocumento.setString(5, libro.getMesPublicacion());
-	            pstmtDocumento.setString(6, libro.getEditorial());
-	            pstmtDocumento.setString(7, libro.getEstado());
-	            pstmtDocumento.setInt(8, Integer.parseInt(libro.getPropietario()));
-	            pstmtDocumento.setInt(9, libro.getIdDocumento());
-	            pstmtDocumento.executeUpdate();
-
-	            pstmtLibro.setString(1, libro.getIsbn());
-	            pstmtLibro.setInt(2, Integer.parseInt(libro.getNumeroPaginas()));
-	            pstmtLibro.executeUpdate();
+	        	pstmt.setString(1, libro.getIsbn());
+	        	if (!libro.getNumeroPaginas().isEmpty()) {
+					pstmt.setInt(2, Integer.parseInt(libro.getNumeroPaginas()));
+		        } else {
+		        	pstmt.setNull(2, java.sql.Types.INTEGER);
+		        }
+	        	pstmt.setInt(3, libro.getIdDocumento());
+	        	pstmt.executeUpdate();
 
 	            conn.commit(); // Confirma los cambios
 	        } catch (SQLException e) {
@@ -134,6 +131,7 @@ public class LibroDAO{
 	    }
 	    return null;
 	}
+
 
 
 }

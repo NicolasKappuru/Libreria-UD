@@ -1,7 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     background-color: #87CEFA;
+    padding: 0;
+    margin: 0;
+}
+
+input, input::selection {
+    border-width: 0;
 }
 
 .container {
@@ -63,15 +69,35 @@ footer {
     width: 100%;
 }
 
-.botonModificacionDocumento {
+.botonModificacionDocumento, .botonReservaDocumento {
     border-radius: 2%;
-    width: 50%;
-
-    
-    font-weight: bold;
-    background-color: #87CEFA;
+    margin-top: 1%;
+    width: 48%;
+    font-size: 0.90em;
+    background-color: #1e90ff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
 }
 
-.botonBusquedaDocumento:active {
-    background-color: darkcyan;
+.botonReservaDocumento {
+    background-color: #1eff5a;
+    margin-left: 3%;
+}
+
+.botonModificacionDocumento:hover {
+    background-color: #1463b3;
+}
+
+.botonReservaDocumento:hover {
+    background-color: #1edb50;
+}
+
+.botonModificacionDocumento:active {
+    background-color: #114f82;
+}
+
+.botonReservaDocumento:active {
+    background-color: #11ab3a;
 }

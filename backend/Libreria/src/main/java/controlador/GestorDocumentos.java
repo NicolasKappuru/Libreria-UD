@@ -183,4 +183,61 @@ public class GestorDocumentos {
             return objectMapper.writeValueAsString(errorResponse);
         }
 	}
+
+	public String modificarEstado(int iddocumento, String estado, String usuario) throws JsonProcessingException{
+		try {
+			
+			String estadoDoc = estado;
+			if(estado.equals("Entregado") || estado.equals("Habilito")) {
+				estadoDoc = "Disponible";
+			}
+			DocumentoDTO documento = new DocumentoDTO.BuilderDoc().setEstado(estadoDoc).setIdDocumento(iddocumento).build();
+			
+			documentoDAO.actualizarEstado(documento);
+			
+			LocalDate fechaActual = LocalDate.now();
+	        String fechaFormateada = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			EventoDTO evento = new EventoDTO.BuilderEvento()
+					.setTipoEvento(estado)
+					.setUsuario(usuario)
+					.setDocumento(documento.getIdDocumento())
+					.setFecha(fechaFormateada)
+					.build();
+			
+			eventoDAO.crear(evento);
+            return "{\"mensaje\": \"Actualizado\"}";
+            
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
+	
+	public String eliminarDocumento(HttpServletRequest request, String usuario) throws JsonProcessingException {
+		try {
+			
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+            return modificarEstado(documento.getIddocumento(), "Eliminado", usuario);
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
+	
+	public String habilitarDocumento(HttpServletRequest request, String usuario) throws JsonProcessingException {
+		try {
+			
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+            return modificarEstado(documento.getIddocumento(), "Habilito", usuario);
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
 }

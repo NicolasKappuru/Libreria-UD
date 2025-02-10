@@ -1,4 +1,4 @@
-package controlador;
+package Servlets;
 
 import java.io.IOException;
 
@@ -8,14 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet({"/documento/crear", "/documento/modificar", "/documento/eliminar"})
+import controlador.FachadaSistema;
+
+@WebServlet({"/documento/crear", "/documento/modificar", "/documento/reservar",
+		"/documento/entregar", "/documento/eliminar", "/documento/habilitar"})
 public class ServletDocumentos extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private GestorDocumentos gestor ;
+	private FachadaSistema gestor;
 	
 	public void init() throws ServletException {
         super.init();
-        gestor = new GestorDocumentos();
+        gestor = FachadaSistema.getInstancia();
         
     }
 	
@@ -44,8 +47,21 @@ public class ServletDocumentos extends HttpServlet{
         String usuario = (String) request.getAttribute("usuario");
         if ("/documento/crear".equals(urlPath)) {
             jsonResponse = gestor.crearDocumento(request, usuario);
-        }else if("/documento/modificar".equals(urlPath)) {
+        }
+        else if("/documento/modificar".equals(urlPath)) {
         	jsonResponse = gestor.modificarDocumento(request, usuario);
+        }
+        else if("/documento/reservar".equals(urlPath)) {
+        	jsonResponse = gestor.reservarDocumento(request, usuario);
+        }
+        else if("/documento/entregar".equals(urlPath)) {
+        	jsonResponse = gestor.entregarDocumento(request, usuario);
+        }
+        else if("/documento/eliminar".equals(urlPath)) {
+        	jsonResponse = gestor.eliminarDocumento(request, usuario);
+        }
+        else if("/documento/habilitar".equals(urlPath)) {
+        	jsonResponse = gestor.habilitarDocumento(request, usuario);
         }
         else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

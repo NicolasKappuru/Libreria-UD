@@ -1,39 +1,50 @@
 package modelo.persistenciaDAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import modelo.OtrosDTO.ReservaDTO;
+import modelo.persistencia.ConexionDB;
 
-public class ReservaDAO implements DAO<ReservaDTO> {
+public class ReservaDAO{
 
-	@Override
-	public void crear(ReservaDTO DTO) throws SQLException {
-		// TODO Auto-generated method stub
+	public void crear(ReservaDTO reserva)throws SQLException{
+		String sql = "INSERT INTO reserva (fechareserva, estado, documento, usuario) VALUES (?, ?, ?, ?)";
+
+	    try (Connection conexion = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+	    	
+	    	pstmt.setDate(1, java.sql.Date.valueOf(reserva.getFechaReserva()));
+	        pstmt.setString(2, reserva.getEstado());
+	        pstmt.setInt(3, reserva.getDocumento());
+	        pstmt.setString(4, reserva.getUsuario());
+	     
+	        pstmt.executeUpdate();
+	    }
 		
 	}
+	
+	public int actualizar(ReservaDTO reserva)throws SQLException{
+		String sql = "UPDATE reserva SET estado = ?, fechaentrega = ? WHERE idreserva = ? RETURNING documento";
 
-	@Override
-	public ReservaDTO buscarPorNombre(String nombre) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void eliminarPorID(int id) {
-		// TODO Auto-generated method stub
+	    try (Connection conexion = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+	    	
+	    	pstmt.setString(1, reserva.getEstado());
+	    	pstmt.setDate(2, java.sql.Date.valueOf(reserva.getFechaEntrega()));
+	        pstmt.setInt(3, reserva.getIdReserva());
+	     
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt(1); 
+	            } else {
+	                throw new SQLException("No se pudo obtener el ID generado.");
+	            }
+	        }
+	    }
 		
-	}
-
-	@Override
-	public void actualizar(ReservaDTO DTO) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ReservaDTO buscarPorId(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

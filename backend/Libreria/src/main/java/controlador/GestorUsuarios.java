@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Servlets.JwtUtil;
 import modelo.persistencia.UsuarioDAO;
 import modelo.persistencia.UsuarioDTO;
 import modelo.Usuario;

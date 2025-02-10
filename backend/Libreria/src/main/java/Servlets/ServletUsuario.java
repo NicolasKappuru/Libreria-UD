@@ -1,4 +1,4 @@
-package controlador;
+package Servlets;
 
 import java.io.IOException;
 
@@ -8,14 +8,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controlador.FachadaSistema;
+
 @WebServlet({"/usuario/datos", "/usuario/registrar", "/usuario/login"})
 public class ServletUsuario extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private GestorUsuarios gestor;
+    private FachadaSistema gestor;
 
     public void init() throws ServletException {
         super.init();
-        gestor = new GestorUsuarios();
+        gestor = FachadaSistema.getInstancia();
     }
 
     // Manejo de las solicitudes OPTIONS para permitir CORS

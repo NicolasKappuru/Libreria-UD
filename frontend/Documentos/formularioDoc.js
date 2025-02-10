@@ -36,6 +36,8 @@ document.getElementById("submitBtn").addEventListener("click", function(event) {
             modificar();
         }
     }
+
+    location.replace("../PaginaPrincipal/paginaPrincipal.html");
 });
 
 function crear()  {
@@ -63,6 +65,12 @@ function crear()  {
         body: JSON.stringify(data)
     })
     .then(response => {
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            return Promise.reject("Usuario no autorizado (401)");
+        }
         if (!response.ok) {
             throw new Error('Error al obtener los datos del usuario');
         }
@@ -101,13 +109,16 @@ function modificar(){
         body: JSON.stringify(data)
     })
     .then(response => {
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            return Promise.reject("Usuario no autorizado (401)");
+        }
         if (!response.ok) {
             throw new Error('Error al obtener los datos del usuario');
         }
         return response.json();
-    })
-    .then(data => {
-        console.log(data.mensaje);
     })
     .catch(error => {
         console.error('Error:', error);

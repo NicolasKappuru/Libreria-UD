@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +21,10 @@ import modelo.DocumentoDTO.DocumentoFactory;
 import modelo.DocumentoDTO.LibroDTO;
 import modelo.DocumentoDTO.PonenciaDTO;
 import modelo.FactoryDAO.FabricaDAO;
+import modelo.OtrosDTO.EventoDTO;
 import modelo.persistenciaDAO.ArticuloDAO;
 import modelo.persistenciaDAO.DocumentoDAO;
+import modelo.persistenciaDAO.EventoDAO;
 import modelo.persistenciaDAO.LibroDAO;
 import modelo.persistenciaDAO.PonenciaDAO;
 
@@ -29,21 +33,25 @@ public class GestorDocumentos {
 	private DocumentoDAO documentoDAO;
 	private ObjectMapper objectMapper;
 	private FabricaDAO fabrica;
+	private EventoDAO eventoDAO;
 	
 	public GestorDocumentos() {
 		documentoDAO = new DocumentoDAO();
 		fabrica = new FabricaDAO();
+		eventoDAO = new EventoDAO();
 		objectMapper = new ObjectMapper();
 	}
 	
 	public DocumentoDTO.BuilderDoc construirBuilder(Documento documento, String usuario){
 		String mes = "";
-        String dia = "";
-		if(!documento.getFechaPublicacion().isEmpty()) {
-			LocalDate fecha = LocalDate.parse(documento.getFechaPublicacion(), DateTimeFormatter.ISO_LOCAL_DATE);
-	        mes = String.valueOf(fecha.getMonthValue());
-	        dia = String.valueOf(fecha.getDayOfMonth());
+		String dia = "";
+		if (!documento.getFechaPublicacion().isEmpty()) {
+		    LocalDate fecha = LocalDate.parse(documento.getFechaPublicacion(), DateTimeFormatter.ISO_LOCAL_DATE);
+		    Locale spanishLocale = Locale.of("es", "ES");
+		    mes = fecha.getMonth().getDisplayName(TextStyle.FULL, spanishLocale);
+		    dia = String.valueOf(fecha.getDayOfMonth());
 		}
+
 		return DocumentoFactory.getBuilder(documento.getTipo())
         	    .setTitulo(documento.getTitulo())
         	    .setFechaPublicacion(documento.getFechaPublicacion())
@@ -103,7 +111,17 @@ public class GestorDocumentos {
 				PonenciaDAO dao = fabrica.crearPonencia();
 				dao.crear(ponencia);
 			}
+			LocalDate fechaActual = LocalDate.now();
+
+	        String fechaFormateada = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			EventoDTO evento = new EventoDTO.BuilderEvento()
+					.setTipoEvento("Creado")
+					.setUsuario(usuario)
+					.setDocumento(iddocumento)
+					.setFecha(fechaFormateada)
+					.build();
 			
+			eventoDAO.crear(evento);
             return "{\"mensaje\": \""+iddocumento+"\"}";
             
         } catch (IOException e) {
@@ -141,7 +159,17 @@ public class GestorDocumentos {
 				PonenciaDAO dao = fabrica.crearPonencia();
 				dao.actualizar(ponencia);
 			}
+			LocalDate fechaActual = LocalDate.now();
+
+	        String fechaFormateada = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			EventoDTO evento = new EventoDTO.BuilderEvento()
+					.setTipoEvento("Modificado")
+					.setUsuario(usuario)
+					.setDocumento(documento.getIddocumento())
+					.setFecha(fechaFormateada)
+					.build();
 			
+			eventoDAO.crear(evento);
             return "{\"mensaje\": \"Actualizado\"}";
             
         } catch (IOException e) {

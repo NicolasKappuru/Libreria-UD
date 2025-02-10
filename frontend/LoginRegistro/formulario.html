@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro - Librería UD</title>
-    <link rel="stylesheet" href="stylesLoginFormulario.css"> <!-- Vincula el archivo CSS -->
+    <link rel="stylesheet" href="stylesLoginFormulario.css"> 
 </head>
 <body>
-    <!-- Encabezado -->
     <header>
         <h1>Librería UD</h1>
-        <p>Bienvenido, ingresa tus datos para registrarte.</p> <!--Por si vamos a ingresar algo mas -->
+        <p>Bienvenido, ingresa tus datos para registrarte.</p>
     </header>
 
-    <!-- Cuerpo -->
     <main>
         <div class="form-container">
             <h2>Ingrese los datos del nuevo usuario</h2>
@@ -22,7 +20,7 @@
                     <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
                 </div>
                 <div class="form-field">
-                    <input type="text" id="telefono" name="telefono" placeholder="Teléfono" required>
+                    <input type="number" id="telefono" name="telefono" placeholder="Teléfono" required>
                 </div>
                 <div class="form-field">
                     <input type="text" id="direccion" name="direccion" placeholder="Dirección" required>
@@ -34,16 +32,15 @@
                     <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
                 </div>
                 <div class="form-field">
-                    <button type="button" id="formSubmitBtn">Confirmar</button>
+                    <button type="submit" id="formSubmitBtn">Confirmar</button>
                 </div>
                 <div class="form-field volver">
-                    <a href="login.html">Volver</a> <!-- Enlace para regresar a la página anterior -->
+                    <a href="login.html">Volver</a>
                 </div>
             </form>
         </div>
     </main>
 
-    <!-- Pie de página -->
     <footer>
         <p>&copy; 2025 Librería UD. Todos los derechos reservados. © </p>
     </footer>

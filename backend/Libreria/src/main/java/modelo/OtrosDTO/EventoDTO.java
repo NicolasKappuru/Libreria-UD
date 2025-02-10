@@ -8,13 +8,15 @@ public class EventoDTO implements Serializable {
     private int idEvento;
     private String tipoEvento;
     private String usuario;
-    private String documento;
+    private int documento;
+    private String fecha;
 
     public EventoDTO(BuilderEvento builder) {
         this.idEvento = builder.idEvento;
         this.tipoEvento = builder.tipoEvento;
         this.usuario = builder.usuario;
         this.documento = builder.documento;
+        this.fecha = builder.fecha;
     }
 
     public int getIdEvento() { return idEvento; }
@@ -23,7 +25,9 @@ public class EventoDTO implements Serializable {
 
     public String getUsuario() { return usuario; }
 
-    public String getDocumento() { return documento; }
+    public int getDocumento() { return documento; }
+    
+    public String getFecha() { return fecha; }
 
     @Override
     public String toString() {
@@ -34,7 +38,8 @@ public class EventoDTO implements Serializable {
         private int idEvento;
         private String tipoEvento;
         private String usuario;
-        private String documento;
+        private int documento;
+        private String fecha;
 
         public BuilderEvento setIdEvento(int idEvento) {
             this.idEvento = idEvento;
@@ -51,9 +56,14 @@ public class EventoDTO implements Serializable {
             return this;
         }
 
-        public BuilderEvento setDocumento(String documento) {
+        public BuilderEvento setDocumento(int documento) {
             this.documento = documento;
             return this;
+        }
+        
+        public BuilderEvento setFecha(String fecha) {
+        	this.fecha = fecha;
+        	return this;
         }
 
         public EventoDTO build() {

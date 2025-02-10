@@ -26,7 +26,6 @@ public class GestorUsuarios {
     public String registrarUsuario(HttpServletRequest request) throws JsonProcessingException {
         try {
             Usuario usuario = objectMapper.readValue(request.getReader(), Usuario.class);
-            System.out.println("Usuario recibido: " + usuario);
             UsuarioDTO usuarioDTO = new UsuarioDTO.Builder()
             	    .setNombre(usuario.getNombre())
             	    .setCorreoElectronico(usuario.getCorreoElectronico())

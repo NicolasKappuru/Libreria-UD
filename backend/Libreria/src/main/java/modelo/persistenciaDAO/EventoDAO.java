@@ -7,9 +7,8 @@ import java.sql.SQLException;
 import modelo.OtrosDTO.EventoDTO;
 import modelo.persistencia.ConexionDB;
 
-public class EventoDAO implements DAO<EventoDTO>{
+public class EventoDAO{
 
-	@Override
 	public void crear(EventoDTO evento) throws SQLException {
 		String sql = "INSERT INTO evento (tipoevento, usuario, documento, evento) VALUES (?, ?, ?, ?)";
 
@@ -29,25 +28,21 @@ public class EventoDAO implements DAO<EventoDTO>{
 		
 	}
 
-	@Override
 	public EventoDTO buscarPorNombre(String nombre) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void eliminarPorID(int id) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void actualizar(EventoDTO DTO) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public EventoDTO buscarPorId(int id) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;

@@ -1,4 +1,4 @@
-package controlador;
+package Servlets;
 
 import java.io.IOException;
 
@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Claims;
 
-@WebFilter({"/usuario/datos", "/documento/crear", "/documento/modificar"})
+@WebFilter({"/usuario/datos", "/documento/crear", "/documento/modificar",
+		"/documento/reservar", "/documento/entregar", "/documento/eliminar", "/documento/habilitar"})
 public class JwtFiltro implements Filter {
     
     @Override

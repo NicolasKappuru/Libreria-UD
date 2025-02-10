@@ -2,9 +2,6 @@ package modelo.OtrosDTO;
 
 import java.io.Serializable;
 
-import modelo.DocumentoDTO.DocumentoDTO;
-import modelo.persistencia.UsuarioDTO;
-
 public class ReservaDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -12,8 +9,8 @@ public class ReservaDTO implements Serializable {
     private String fechaReserva;
     private String fechaEntrega;
     private String estado;
-    private UsuarioDTO usuario;
-    private DocumentoDTO documento;
+    private String usuario;
+    private int documento;
 
     public ReservaDTO(BuilderReserva builder) {
         this.idReserva = builder.idReserva;
@@ -32,9 +29,9 @@ public class ReservaDTO implements Serializable {
 
     public String getEstado() { return estado; }
 
-    public UsuarioDTO getUsuario() { return usuario; }
+    public String getUsuario() { return usuario; }
 
-    public DocumentoDTO getDocumento() { return documento; }
+    public int getDocumento() { return documento; }
 
     @Override
     public String toString() {
@@ -46,8 +43,8 @@ public class ReservaDTO implements Serializable {
         private String fechaReserva;
         private String fechaEntrega;
         private String estado;
-        private UsuarioDTO usuario;
-        private DocumentoDTO documento;
+        private String usuario;
+        private int documento;
 
         public BuilderReserva setIdReserva(int idReserva) {
             this.idReserva = idReserva;
@@ -69,12 +66,12 @@ public class ReservaDTO implements Serializable {
             return this;
         }
 
-        public BuilderReserva setUsuario(UsuarioDTO usuario) {
+        public BuilderReserva setUsuario(String usuario) {
             this.usuario = usuario;
             return this;
         }
 
-        public BuilderReserva setDocumento(DocumentoDTO documento) {
+        public BuilderReserva setDocumento(int documento) {
             this.documento = documento;
             return this;
         }

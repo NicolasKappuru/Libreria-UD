@@ -115,7 +115,17 @@ public class DocumentoDAO{
         return null;
     }
 
+    public void actualizarEstado(DocumentoDTO documento) throws SQLException {
+	    String sql = "UPDATE documento SET estado = ? WHERE iddocumento = ?";
+	    
+	    try (Connection conn = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-
+	        pstmt.setString(1, documento.getEstado());
+	        pstmt.setInt(2, documento.getIdDocumento());
+			pstmt.executeUpdate();
+	    }
+	}
+    
 
 }

@@ -2,7 +2,10 @@ package modelo.persistenciaDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import modelo.OtrosDTO.EventoDTO;
 import modelo.persistencia.ConexionDB;
@@ -25,27 +28,36 @@ public class EventoDAO{
 	        }
 	        pstmt.executeUpdate();
 	    }
-		
+	}
+	
+	//Metodo para retornar eventos de un documento
+		public List<String> buscarPorDocumento(int id) throws SQLException {
+		    String sql = "SELECT e.tipoevento, d.titulo, d.tipo, e.usuario, e.fechaevento " +
+		                 "FROM evento e " +
+		                 "JOIN documento d ON e.documento = d.iddocumento " +
+		                 "WHERE d.iddocumento = ?";
+
+		    List<String> eventos = new ArrayList<>();
+
+		    try (Connection conn = ConexionDB.getInstance().getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		        
+		        pstmt.setInt(1, id);
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            while (rs.next()) {
+		                String eventoStr = rs.getString("tipoevento") + " - " +
+		                                   rs.getString("titulo") + "|" +
+		                                   rs.getString("tipo") + ", " +
+		                                   rs.getString("usuario") + ", " +
+		                                   rs.getString("fechaevento"); // Cambiado de fechapublicacion a fechaevento
+		                
+		                eventos.add(eventoStr);
+		            }
+		        }
+		    }
+		    return eventos;
 	}
 
-	public EventoDTO buscarPorNombre(String nombre) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void eliminarPorID(int id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void actualizar(EventoDTO DTO) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public EventoDTO buscarPorId(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -7,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import modelo.DocumentoDTO.DocumentoDTO;
 import modelo.persistencia.ConexionDB;
@@ -127,5 +131,58 @@ public class DocumentoDAO{
 	    }
 	}
     
+  //Metodo para buscar los documentos asociados a un usuario 
+  	public List<Map<String, Object>> buscarPorNombre(String nombre) throws SQLException {
+  	    String sql = "SELECT iddocumento, UPPER(titulo) AS titulo, estado FROM documento WHERE UPPER(titulo) LIKE ?";
+  	    List<Map<String, Object>> listaResultados = new ArrayList<>();
 
+  	    try (Connection conn = ConexionDB.getInstance().getConnection();
+  	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+  	        pstmt.setString(1, "%" + nombre.toUpperCase() + "%"); // Buscar coincidencias parciales en mayúsculas
+
+  	        try (ResultSet rs = pstmt.executeQuery()) {
+  	            while (rs.next()) {
+  	                Map<String, Object> resultado = new HashMap<>();
+  	                resultado.put("id", rs.getInt("iddocumento"));
+  	                resultado.put("titulo", rs.getString("titulo"));
+  	                resultado.put("estado", rs.getString("estado")); // Agregamos el estado
+  	                listaResultados.add(resultado);
+  	            }
+  	        }
+  	    }
+  	    return listaResultados;
+  	}
+  	
+  	//Para buscar los documentos de la palabra que busque el usuario
+  	public List<DocumentoDTO> buscarPorTitulo(String nombre) throws SQLException {
+  	    String sql = "SELECT * FROM documento WHERE UPPER(titulo) LIKE ?";
+  	    List<DocumentoDTO> listaDocumentos = new ArrayList<>();
+
+  	    try (Connection conn = ConexionDB.getInstance().getConnection();
+  	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+  	        
+  	        pstmt.setString(1, "%" + nombre.toUpperCase() + "%"); // Búsqueda insensible a mayúsculas
+
+  	        try (ResultSet rs = pstmt.executeQuery()) {
+  	            while (rs.next()) {
+  	                DocumentoDTO documento = new DocumentoDTO.BuilderDoc()
+  	                        .setIdDocumento(rs.getInt("iddocumento"))
+  	                        .setTitulo(rs.getString("titulo"))
+  	                        .setFechaPublicacion(rs.getString("fechapublicacion"))
+  	                        .setAutores(rs.getString("autores"))
+  	                        .setDiaPublicacion(rs.getString("diapublicacion"))
+  	                        .setMesPublicacion(rs.getString("mespublicacion"))
+  	                        .setEditorial(rs.getString("editorial"))
+  	                        .setEstado(rs.getString("estado"))
+  	                        .setPropietario(rs.getString("propietario"))
+  	                        .build();
+  	                
+  	                listaDocumentos.add(documento);
+  	            }
+  	        }
+  	    }
+  	    return listaDocumentos;
+  	}
+ 
 }

@@ -1,12 +1,9 @@
 package modelo.persistenciaDAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,17 +45,6 @@ public class DocumentoDAO{
 	}
 	   
 
-
-
-	public void eliminarPorID(int id) throws SQLException {
-	    String sql = "DELETE FROM documento WHERE iddocumento = ?";
-	    try (Connection conn = ConexionDB.getInstance().getConnection();
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	        pstmt.setInt(1, id);
-	        pstmt.executeUpdate();
-	    }
-	}
-
 	public void actualizar(DocumentoDTO documento) throws SQLException {
 	    String sql = "UPDATE documento SET titulo = ?, fechapublicacion = ?, autores = ?, diapublicacion = ?, " +
 	                 "mespublicacion = ?, editorial = ?, estado = ? WHERE iddocumento = ?";
@@ -81,17 +67,6 @@ public class DocumentoDAO{
 			pstmt.executeUpdate();
 	    }
 	}
-
-    public static Date convertirStringADate(String fechaStr) {
-        try {
-            SimpleDateFormat formato = new SimpleDateFormat("d/M/yyyy"); // Define el formato esperado
-            java.util.Date fechaUtil = formato.parse(fechaStr); // Convierte a java.util.Date
-            return new java.sql.Date(fechaUtil.getTime()); // Convierte a java.sql.Date
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null; // Manejo de error: Devuelve null si hay un fallo
-        }
-    }
 
     public DocumentoDTO buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM documento WHERE iddocumento = ?";
@@ -130,7 +105,6 @@ public class DocumentoDAO{
 	    }
 	}
     
-    //Metodo para buscar los documentos asociados a un usuario 
   	public List<Map<String, Object>> buscarPorNombre(String nombre) throws SQLException {
   	    String sql = "SELECT iddocumento, titulo, estado FROM documento WHERE propietario = ?";
   	    List<Map<String, Object>> listaResultados = new ArrayList<>();
@@ -153,7 +127,6 @@ public class DocumentoDAO{
   	    return listaResultados;
   	}
   	
-  	//Para buscar los documentos de la palabra que busque el usuario
   	public List<DocumentoDTO> buscarPorTitulo(String nombre) throws SQLException {
   	    String sql = "SELECT * FROM documento WHERE UPPER(titulo) LIKE ? AND estado != 'Eliminado'";
   	    List<DocumentoDTO> listaDocumentos = new ArrayList<>();

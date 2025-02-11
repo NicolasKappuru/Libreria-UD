@@ -29,34 +29,6 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
 		//Aqui ponemos la logica
 		return null;
 	}
-
-	
-	public void eliminarPorID(int id) throws SQLException {
-	    String sqlArticulo = "DELETE FROM articulo WHERE idarticulo = ?";
-	    String sqlDocumento = "DELETE FROM documento WHERE iddocumento = " +
-	                          "(SELECT documento FROM articulo WHERE idarticulo = ?)";
-
-	    try (Connection conn = ConexionDB.getInstance().getConnection()) {
-	        conn.setAutoCommit(false);
-
-	        try (PreparedStatement pstmtDocumento = conn.prepareStatement(sqlDocumento);
-	             PreparedStatement pstmtArticulo = conn.prepareStatement(sqlArticulo)) {
-	            
-	            pstmtDocumento.setInt(1, id);
-	            pstmtDocumento.executeUpdate();
-
-	            pstmtArticulo.setInt(1, id);
-	            pstmtArticulo.executeUpdate();
-	            
-	            conn.commit();
-	        } catch (SQLException e) {
-	            conn.rollback();
-	            throw e;
-	        }
-	    }
-	}
-
-
 	
 	public void actualizar(ArticuloDTO articulo) throws SQLException {	    
 	    String sqlArticulo = "UPDATE articulo SET ssn = ? WHERE iddocumento = ?";
@@ -77,18 +49,6 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
 	        }
 	    }
 	}
-
-
-    public static Date convertirStringADate(String fechaStr) {
-        try {
-            SimpleDateFormat formato = new SimpleDateFormat("d/M/yyyy"); // Define el formato esperado
-            java.util.Date fechaUtil = formato.parse(fechaStr); // Convierte a java.util.Date
-            return new java.sql.Date(fechaUtil.getTime()); // Convierte a java.sql.Date
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null; // Manejo de error: Devuelve null si hay un fallo
-        }
-    }
 
 	public ArticuloDTO buscarPorId(int id) throws SQLException {
 	    String sql = "SELECT ssn FROM articulo WHERE iddocumento = ?";

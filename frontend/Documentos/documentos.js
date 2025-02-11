@@ -71,4 +71,50 @@ function nextDocument(tipo) {
     displayDocument(tipo);
 }
 
+function habilitarBoton() {
+    const input = document.getElementById("buscarDocumento");
+    const boton = document.getElementById("botonBuscar");
+    boton.disabled = input.value.trim() === "";
+}
+
+function realizarConsulta(){
+    const input = document.getElementById("buscarDocumento").value.trim();
+
+    if (input) {
+        localStorage.setItem("titulo", input);
+        window.location.href = "../Documentos/documentos.html";
+    }
+}
+
+function ver(id){
+    let data = {
+        "iddocumento": id
+    }
+    fetch('http://localhost:8080/Libreria/documento', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(response =>{
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            throw new Error("Usuario no autorizado (401)");
+        }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+    }).then(data => {
+        localStorage.setItem("Documento", JSON.stringify(data))
+        location.replace("../HistorialUsuario/descripcionDocumento.html");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", fetchDocuments);

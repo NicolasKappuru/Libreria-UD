@@ -45,4 +45,41 @@ public class ReservaDAO{
 	        }
 	    }
 	}
+	
+	public String consultarReservas(String usuario) throws SQLException {
+	    String sql = "SELECT r.idreserva, d.titulo, d.tipo, r.fechareserva, r.fechaentrega, r.estado " +
+	                 "FROM documento d JOIN reserva r ON d.iddocumento = r.documento WHERE usuario = ?";
+
+	    StringBuilder json = new StringBuilder();
+	    json.append("[");
+
+	    try (Connection conexion = ConexionDB.getInstance().getConnection();
+	         PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+
+	        pstmt.setString(1, usuario);
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            boolean first = true;
+	            while (rs.next()) {
+	                if (!first) {
+	                    json.append(",");
+	                }
+	                first = false;
+
+	                json.append("{")
+	                    .append("\"idreserva\":").append(rs.getInt("idreserva")).append(",")
+	                    .append("\"titulo\":\"").append(rs.getString("titulo")).append("\",")
+	                    .append("\"tipo\":\"").append(rs.getString("tipo")).append("\",")
+	                    .append("\"fechareserva\":\"").append(rs.getDate("fechareserva")).append("\",")
+	                    .append("\"fechaentrega\":\"").append(rs.getDate("fechaentrega")).append("\",")
+	                    .append("\"estado\":\"").append(rs.getString("estado")).append("\"")
+	                    .append("}");
+	            }
+	        }
+	    }
+
+	    json.append("]");
+	    return json.toString();
+	}
+
 }

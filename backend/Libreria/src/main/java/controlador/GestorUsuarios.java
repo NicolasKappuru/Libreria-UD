@@ -104,5 +104,12 @@ public class GestorUsuarios {
             }
         }
     }
-
+    
+    public String consultarUsuario(HttpServletRequest request) throws IOException {
+        
+        	Usuario usuario = objectMapper.readValue(request.getReader(), Usuario.class);
+            
+            return obtenerUsuario(usuario.getNombre()); 
+        
+    }
 }

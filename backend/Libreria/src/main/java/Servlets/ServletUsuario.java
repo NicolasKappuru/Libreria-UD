@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import controlador.FachadaSistema;
 
-@WebServlet({"/usuario/datos", "/usuario/registrar", "/usuario/login", "/usuario/documentos"})
+@WebServlet({"/usuario/datos", "/usuario/registrar", "/usuario/login", "/usuario/documentos", "/usuario/reservas", "/usuario/consultar"})
 public class ServletUsuario extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private FachadaSistema gestor;
@@ -40,7 +40,9 @@ public class ServletUsuario extends HttpServlet {
             jsonResponse = gestor.registrarUsuario(request);
         } else if ("/usuario/login".equals(urlPath)) {
             jsonResponse = gestor.loginUsuario(request);
-        } else {
+        } else if ("/usuario/consultar".equals(urlPath)) {
+            jsonResponse = gestor.consultarUsuario(request);
+        }else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             jsonResponse = "{\"mensaje\": \"URL no encontrada\"}";
         }
@@ -59,6 +61,8 @@ public class ServletUsuario extends HttpServlet {
             jsonResponse = gestor.obtenerUsuario(usuario);
         } else if ("/usuario/documentos".equals(urlPath)) {
             jsonResponse = gestor.obtenerDocumentos(usuario);
+        } else if ("/usuario/reservas".equals(urlPath)) {
+            jsonResponse = gestor.obtenerReservas(usuario);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             jsonResponse = "{\"mensaje\": \"URL no encontrada\"}";

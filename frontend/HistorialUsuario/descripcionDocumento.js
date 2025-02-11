@@ -43,7 +43,6 @@ function cargarEventos(){
 }
 
 function cargarDocumento() {
-    
     if (!documentoStr) {
         alert("No hay documento cargado.");
         return;
@@ -71,8 +70,14 @@ function cargarDocumento() {
             <div class='campo'><label>ISBN:</label><input type='text' value='${documento.isbn ?? ""}' readonly></div>
         `;
     }
-    contenido += `<div class='campo'><label>Propietario:</label><input type='text' value='${documento.propietario ?? ""}' readonly></div>`
-            
+
+    contenido += `
+        <div class='campo'>
+            <label></label>
+            <a href="#" onclick="verPropietario('${documento.propietario}')">Haz clic aquí para ver los datos del propietario</a>
+        </div>
+    `;
+
     contenido += `<button class="botonSalir" onclick="window.location.href='../PaginaPrincipal/paginaPrincipal.html'">Salir</button>`;
 
     if (documento.estado === "Disponible") {
@@ -86,6 +91,17 @@ function cargarDocumento() {
 
     formulario.innerHTML = contenido;
 }
+
+function verPropietario(propietario) {
+    if (!propietario) {
+        alert("No hay datos del propietario.");
+        return;
+    }
+
+    localStorage.setItem("usuario", propietario);
+    window.location.href = "../PaginaPrincipal/informacionConsulta.html";
+}
+
 
 async function reservarDocumento() {
     try {
@@ -109,7 +125,7 @@ async function reservarDocumento() {
             window.location.href = "../LoginRegistro/login.html";
             throw new Error("Usuario no autorizado (401)");
         }
-        if (!response.ok) {
+        if (!reservarResponse.ok) {
             throw new Error('Error al modificar el documento');
         }
 

@@ -1,5 +1,7 @@
 package controlador;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,5 +78,13 @@ public class FachadaSistema {
     
     public String obtenerPorTitulo(HttpServletRequest request) throws JsonProcessingException{
     	return gestorDocumentos.obtenerPorTitulo(request);
+    }
+
+    public String obtenerReservas(String usuario) throws JsonProcessingException{
+    	return gestorReservas.consutalReservas(usuario);
+    }
+    
+    public String consultarUsuario(HttpServletRequest request) throws IOException{
+    	return gestorUsuarios.consultarUsuario(request);
     }
 }

@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     localStorage.removeItem("Documento");
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("titulo");
     fetch('http://localhost:8080/Libreria/usuario/datos', {
         method: 'GET',
         headers: {
@@ -195,11 +197,14 @@ function habilitarBoton() {
 }
 
 function guardarBusqueda(event) {
-    event.preventDefault();
     const input = document.getElementById("buscarDocumento").value.trim();
 
     if (input) {
         localStorage.setItem("titulo", input);
         window.location.href = "../Documentos/documentos.html";
     }
+}
+
+function borrarToken(){
+    localStorage.removeItem("token")
 }

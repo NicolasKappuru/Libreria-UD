@@ -101,3 +101,23 @@ h3 {
     margin: 3%;
     text-align: center;
 }
+
+.botonDevolverse {
+    background-color: #1e90ff;
+    color: white;
+    padding: 1%;
+    border: 0;
+    border-radius: 6%;
+
+    margin-left: 30%;
+    cursor: pointer;
+    position: absolute;
+}
+
+.botonDevolverse:hover {
+    background-color: #860000;
+}
+
+.botonDevolverse:active {
+    background-color: #bc0404;
+}

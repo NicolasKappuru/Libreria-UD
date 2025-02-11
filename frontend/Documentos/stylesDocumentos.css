@@ -150,3 +150,26 @@ footer {
     background-color: #bc0404;
 }
 
+.botonVerDocumento {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #4682B4; /* Azul similar al header */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+}
+
+.botonVerDocumento:hover {
+    background-color: lightgreen;
+    transform: scale(1.05);
+}
+
+.botonVerDocumento:active {
+    background-color: #2E5A87;
+}

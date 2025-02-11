@@ -83,4 +83,15 @@ public class GestorReservas {
             return -1;
         }
 	}
+
+	public String consutalReservas(String usuario) throws JsonProcessingException {
+		try {
+			return reservaDAO.consultarReservas(usuario);
+		}catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
+
 }

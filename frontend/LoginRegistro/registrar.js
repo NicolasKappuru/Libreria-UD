@@ -1,38 +1,52 @@
 const regForm = document.getElementById("formRegister");
-const regSubmitBtn = document.getElementById("formSubmitBtn")
+const regSubmitBtn = document.getElementById("formSubmitBtn");
 
-regSubmitBtn.addEventListener('click', function() {
+regSubmitBtn.disabled = true;
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^\d{10}$/;
+
+function validarFormulario() {
+    const nombre = document.getElementById("nombre").value.trim();
+    const telefono = document.getElementById("telefono").value.trim();
+    const direccion = document.getElementById("direccion").value.trim();
+    const correo = document.getElementById("correoElectronico").value.trim();
+    const contrasena = document.getElementById("contrasena").value.trim();
+
+    if (!nombre || !telefono || !direccion || !correo || !contrasena) {
+        regSubmitBtn.disabled = true;
+        return;
+    }
+
+    if (!phoneRegex.test(telefono) || !emailRegex.test(correo)) {
+        regSubmitBtn.disabled = true;
+        return;
+    }
+
+    regSubmitBtn.disabled = false;
+}
+
+document.querySelectorAll("#formRegister input").forEach(input => {
+    input.addEventListener("input", validarFormulario);
+});
+
+regSubmitBtn.addEventListener("click", function(event) {
     event.preventDefault();
+
     const regFormData = new FormData(regForm);
-    const numeroTelefonico = regFormData.get('telefono');
-    const correoElectronico = regFormData.get('correoElectronico');
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    const phoneRegex = /^\d{10}$/;
-
-    if (!phoneRegex.test(numeroTelefonico)) {
-        alert("El número de teléfono debe contener exactamente 10 dígitos.");
-        return;
-    }
-
-    // Validar correo electrónico
-    if (!emailRegex.test(correoElectronico)) {
-        alert("El correo electrónico no es válido. Debe tener el formato nombre@correo.dominio");
-        return;
-    }
 
     const regData = {
-        nombre: regFormData.get('nombre'),
-        numeroTelefonico: regFormData.get('telefono'),
-        direccionFisica: regFormData.get('direccion'),
-        correoElectronico: regFormData.get('correoElectronico'),
-        contrasena: regFormData.get('contrasena')
+        nombre: regFormData.get("nombre"),
+        numeroTelefonico: regFormData.get("telefono"),
+        direccionFisica: regFormData.get("direccion"),
+        correoElectronico: regFormData.get("correoElectronico"),
+        contrasena: regFormData.get("contrasena")
     };
-    fetch('http://localhost:8080/Libreria/usuario/registrar', {
-        method: 'POST',
+
+    fetch("http://localhost:8080/Libreria/usuario/registrar", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(regData)
     })
@@ -43,16 +57,14 @@ regSubmitBtn.addEventListener('click', function() {
         return response.json();
     })
     .then(data => {
-        if(data.mensaje === "Creado"){
+        if (data.mensaje === "Creado") {
             alert("Usuario creado exitosamente");
             location.replace("login.html");
-        }    
-        else{
+        } else {
             alert(data.mensaje);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error("Error:", error);
     });
-    
 });

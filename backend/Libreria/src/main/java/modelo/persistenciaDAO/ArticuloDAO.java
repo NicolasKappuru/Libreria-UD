@@ -91,30 +91,15 @@ public class ArticuloDAO implements DAO<ArticuloDTO>{
     }
 
 	public ArticuloDTO buscarPorId(int id) throws SQLException {
-	    String sql = "SELECT a.idarticulo, a.ssn, " +
-	                 "d.iddocumento, d.titulo, d.fechapublicacion, d.autores, " +
-	                 "d.mespublicacion, d.diapublicacion, d.editorial, d.estado, d.propietario " +
-	                 "FROM articulo a " +
-	                 "JOIN documento d ON a.documento = d.iddocumento " +
-	                 "WHERE a.idarticulo = ?";
+	    String sql = "SELECT ssn FROM articulo WHERE iddocumento = ?";
 	    
 	    try (Connection conn = ConexionDB.getInstance().getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	        pstmt.setInt(1, id);
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
-	                System.out.println(rs.getString("titulo"));
 	                return new ArticuloDTO.BuilderArticulo()
 	                        .setSsn(rs.getString("ssn"))
-	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados
-	                        .setTitulo(rs.getString("titulo"))
-	                        .setFechaPublicacion(rs.getString("fechapublicacion"))
-	                        .setAutores(rs.getString("autores"))
-	                        .setMesPublicacion(rs.getString("mespublicacion"))
-	                        .setDiaPublicacion(rs.getString("diapublicacion"))
-	                        .setEditorial(rs.getString("editorial"))
-	                        .setEstado(rs.getString("estado"))
-	                        .setPropietario(rs.getString("propietario"))
 	                        .build();
 	            }
 	        }

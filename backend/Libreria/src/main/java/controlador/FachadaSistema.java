@@ -61,4 +61,20 @@ public class FachadaSistema {
     public String habilitarDocumento(HttpServletRequest request, String usuario) throws JsonProcessingException{
     	return gestorDocumentos.habilitarDocumento(request, usuario);
     }
+
+    public String buscarEventos(HttpServletRequest request) throws JsonProcessingException{
+    	return gestorDocumentos.buscarEventos(request);
+    }
+
+    public String obtenerDocumentos(String usuario) throws JsonProcessingException{
+    	return gestorDocumentos.obtenerDocumentos(usuario);
+    }
+    
+    public String obtenerDocumento(HttpServletRequest request) throws JsonProcessingException{
+    	return gestorDocumentos.obtenerDocumento(request);
+    }
+    
+    public String obtenerPorTitulo(HttpServletRequest request) throws JsonProcessingException{
+    	return gestorDocumentos.obtenerPorTitulo(request);
+    }
 }

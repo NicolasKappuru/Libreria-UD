@@ -21,9 +21,9 @@
                     <form action="../Documentos/formularioDoc.html" >
                         <button class="botonCrearDocumento">Crear Documento</button>
                     </form>
-                    <form action="../Documentos/documentos.html">
-                        <input type="text" placeholder="Nombre de documento:" class="inputBuscarDocumento">
-                        <button class="botonBuscarDocumento">Buscar</button>
+                    <form action="../Documentos/documentos.html" onsubmit="guardarBusqueda(event)">
+                        <input type="text" placeholder="Nombre de documento:" class="inputBuscarDocumento" id="buscarDocumento" oninput="habilitarBoton()">
+                        <button class="botonBuscarDocumento" id="botonBuscar" disabled>Buscar</button>
                     </form>
                 </div>
                 <div class="historial">
@@ -37,34 +37,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="../index.html">Documento 1</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../index.html">Documento 1</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../index.html">Documento 2</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../index.html">Documento 3</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../index.html">Documento 4</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../index.html">Documento 5</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../index.html">Documento 10</a></td>
-                                    <td><button>Eliminar</button></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

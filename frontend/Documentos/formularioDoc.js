@@ -25,19 +25,57 @@ function guardarValoresIniciales() {
     valoresIniciales = obtenerValores();
 }
 
-document.getElementById("submitBtn").addEventListener("click", function(event) {
+document.getElementById("submitBtn").addEventListener("click", async function(event) {
     event.preventDefault();
-    
-    if (haCambiado()) {
-        guardarValoresIniciales();
-        if (iddocumento === "") {
-            crear();
-        } else {
-            modificar();
+    console.log("HOLA");
+    const documento = JSON.parse(localStorage.getItem("Documento"));
+    if(documento){
+        if (haCambiado()) { 
+           await modificar();
         }
+        let data = {
+            "iddocumento": iddocumento
+        }
+        fetch('http://localhost:8080/Libreria/documento', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response =>{
+            if (response.status === 401) {
+                alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+                localStorage.removeItem("token");
+                window.location.href = "../LoginRegistro/login.html";
+                throw new Error("Usuario no autorizado (401)");
+            }
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data)
+            localStorage.setItem("Documento", JSON.stringify(data))
+            location.replace("../HistorialUsuario/descripcionDocumento.html");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
+    }else{
+        if (haCambiado()) {
+            guardarValoresIniciales();
+            if (iddocumento === "") {
+                crear();
+            } else {
+                await modificar();
+            }
+            
+        }
+        location.replace("../PaginaPrincipal/paginaPrincipal.html");
     }
-
-    location.replace("../PaginaPrincipal/paginaPrincipal.html");
+    
 });
 
 function crear()  {
@@ -85,7 +123,7 @@ function crear()  {
     
 };
 
-function modificar(){
+async function modificar() {
     const formData = new FormData(form);
     const data = {
         iddocumento: iddocumento,
@@ -100,50 +138,68 @@ function modificar(){
         ssn: formData.get("ssn")
     };
 
-    fetch('http://localhost:8080/Libreria/documento/modificar', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem("token")}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
+    try {
+        const response = await fetch('http://localhost:8080/Libreria/documento/modificar', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
         if (response.status === 401) {
             alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
             localStorage.removeItem("token");
             window.location.href = "../LoginRegistro/login.html";
-            return Promise.reject("Usuario no autorizado (401)");
+            throw new Error("Usuario no autorizado (401)");
         }
         if (!response.ok) {
-            throw new Error('Error al obtener los datos del usuario');
+            throw new Error('Error al modificar el documento');
         }
-        return response.json();
-    })
-    .catch(error => {
+
+        return response.json(); // Retornar el JSON para que el siguiente fetch lo use
+    } catch (error) {
         console.error('Error:', error);
-    });
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const inputs = document.querySelectorAll("#formDoc input, #formDoc button");
     inputs.forEach(input => input.disabled = true);
     document.getElementById("tipoDocumento").disabled = false;
+    document.getElementById("submitBtn").disabled = false;
+    const documento = JSON.parse(localStorage.getItem("Documento"));
+    if (documento) {
+        iddocumento = documento.iddocumento;
+        document.getElementById("tipoDocumento").value = documento.tipo;
+        document.getElementById("titulo").value = documento.titulo || "";
+        document.getElementById("fechaPublicacion").value = documento.fechaPublicacion || "";
+        document.getElementById("autores").value = documento.autores || "";
+        document.getElementById("editorial").value = documento.editorial || "";
+        document.getElementById("isbn").value = documento.isbn || "";
+        document.getElementById("numPaginas").value = documento.numPaginas || "";
+        document.getElementById("nombreCongreso").value = documento.nombreCongreso || "";
+        document.getElementById("ssn").value = documento.ssn || "";
+
+        activarCampos();
+    }
+
+    guardarValoresIniciales();
 });
 
-function activarCampos(){
+async function activarCampos(){
     let tipoDocumento = document.getElementById("tipoDocumento").value;
+    document.getElementById("tipoDocumento").disabled = false;
 
+    const documento = JSON.parse(localStorage.getItem("Documento"));
     if (tipoDocumento) {
         document.getElementById("tipoDocumento").disabled = true; // Bloquear el select
 
         document.querySelectorAll("#formDoc input").forEach(input => {
             input.disabled = false;
-
            
         });
-
-        document.getElementById("submitBtn").disabled = false;
 
         // Mostrar y habilitar solo los campos necesarios
         document.getElementById("campoISBN").style.display = (tipoDocumento === "libro" || tipoDocumento === "ponencia") ? "block" : "none";
@@ -158,20 +214,20 @@ function activarCampos(){
         document.getElementById("campoSSN").style.display = (tipoDocumento === "articulo") ? "block" : "none";
         document.getElementById("ssn").disabled = !(tipoDocumento === "articulo");
         
-       
-        document.querySelectorAll("#formDoc input").forEach(input => {
-            input.addEventListener("blur", () => {
-                if (haCambiado()) {
-                    guardarValoresIniciales();
-                    if (iddocumento === "") {
-                        crear();
-                    } else {
-                        modificar();
+        if(!documento){
+            document.querySelectorAll("#formDoc input").forEach(input => {
+                input.addEventListener("blur", async () => {
+                    if (haCambiado()) {
+                        guardarValoresIniciales();
+                        if (iddocumento === "") {
+                            crear();
+                        } else {
+                            await modificar();
+                        }
                     }
-                }
+                });
             });
-        });
+        }
+        
     }
 }
-
-guardarValoresIniciales();

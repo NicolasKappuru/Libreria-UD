@@ -13,7 +13,7 @@ import modelo.persistencia.ConexionDB;
 public class EventoDAO{
 
 	public void crear(EventoDTO evento) throws SQLException {
-		String sql = "INSERT INTO evento (tipoevento, usuario, documento, evento) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO evento (tipoevento, usuario, documento, fechaevento) VALUES (?, ?, ?, ?)";
 
 	    try (Connection conexion = ConexionDB.getInstance().getConnection();
 	         PreparedStatement pstmt = conexion.prepareStatement(sql)) {
@@ -50,7 +50,7 @@ public class EventoDAO{
 		                                   rs.getString("titulo") + "|" +
 		                                   rs.getString("tipo") + ", " +
 		                                   rs.getString("usuario") + ", " +
-		                                   rs.getString("fechaevento"); // Cambiado de fechapublicacion a fechaevento
+		                                   rs.getString("fechaevento");
 		                
 		                eventos.add(eventoStr);
 		            }

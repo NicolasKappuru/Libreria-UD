@@ -95,31 +95,16 @@ public class PonenciaDAO implements DAO<PonenciaDTO>{
 
 	@Override
 	public PonenciaDTO buscarPorId(int id) throws SQLException {
-	    String sql = "SELECT p.idponencia, p.congreso, p.isbn, " +
-	                 "d.iddocumento, d.titulo, d.fechapublicacion, d.autores, " +
-	                 "d.mespublicacion, d.diapublicacion, d.editorial, d.estado, d.propietario " +
-	                 "FROM ponencia p " +
-	                 "JOIN documento d ON p.documento = d.iddocumento " +
-	                 "WHERE p.idponencia = ?";
+	    String sql = "SELECT congreso, isbn FROM ponencia WHERE iddocumento = ?";
 	    
 	    try (Connection conn = ConexionDB.getInstance().getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	        pstmt.setInt(1, id);
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
-	                System.out.println(rs.getString("titulo"));
 	                return new PonenciaDTO.BuilderPonencia()
 	                        .setCongreso(rs.getString("congreso"))
 	                        .setIsbn(rs.getString("isbn"))
-	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados
-	                        .setTitulo(rs.getString("titulo"))
-	                        .setFechaPublicacion(rs.getString("fechapublicacion"))
-	                        .setAutores(rs.getString("autores"))
-	                        .setMesPublicacion(rs.getString("mespublicacion"))
-	                        .setDiaPublicacion(rs.getString("diapublicacion"))
-	                        .setEditorial(rs.getString("editorial"))
-	                        .setEstado(rs.getString("estado"))
-	                        .setPropietario(rs.getString("propietario"))
 	                        .build();
 	            }
 	        }

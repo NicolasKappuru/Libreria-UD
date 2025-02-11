@@ -12,9 +12,29 @@ public class Documento {
     private String nombreCongreso;
     private String numPaginas;
     private String ssn;
+    private String estado;
+    private String propietario;
     
     
-    public int getIddocumento() {
+    
+    
+    public String getPropietario() {
+		return propietario;
+	}
+
+	public void setPropietario(String propietario) {
+		this.propietario = propietario;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public int getIddocumento() {
 		return iddocumento;
 	}
 

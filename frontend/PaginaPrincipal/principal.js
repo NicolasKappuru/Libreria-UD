@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", function() {
-
+document.addEventListener("DOMContentLoaded", function () {
+    localStorage.removeItem("Documento");
     fetch('http://localhost:8080/Libreria/usuario/datos', {
         method: 'GET',
         headers: {
@@ -8,8 +8,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     })
     .then(response => {
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            throw new Error("Usuario no autorizado (401)");
+        }
         if (!response.ok) {
-            throw new Error('Error al obtener los datos del usuario');
+            throw new Error(`Error HTTP: ${response.status}`);
         }
         return response.json();
     })
@@ -18,6 +24,57 @@ document.addEventListener("DOMContentLoaded", function() {
         insertarDato("correo", data.correoElectronico);
         insertarDato("direccion", data.direccionFisica);
         insertarDato("telefono", data.numeroTelefonico);
+        
+        return fetch('http://localhost:8080/Libreria/usuario/documentos', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener los documentos del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        let documentos = data;
+        const tbody = document.querySelector(".tabla-container tbody");
+    
+        tbody.innerHTML = "";
+        
+        documentos.forEach(doc => {
+            const tr = document.createElement("tr");
+            
+            const tdTitulo = document.createElement("td");
+            const enlace = document.createElement("a");
+            enlace.href = "#";
+            enlace.textContent = doc.titulo.trim() === "" ? "sin_titulo" : doc.titulo;
+            enlace.onclick = () => verDocumento(doc.id);
+            tdTitulo.appendChild(enlace);
+            tr.appendChild(tdTitulo);
+            
+            const tdAccion = document.createElement("td");
+            
+            if (doc.estado === "Disponible") {
+                const boton = document.createElement("button");
+                boton.textContent = "Eliminar";
+                boton.onclick = () => eliminarDocumento(doc.id);
+                tdAccion.appendChild(boton);
+            } else if (doc.estado === "Eliminado") {
+                const boton = document.createElement("button");
+                boton.textContent = "Habilitar";
+                boton.onclick = () => habilitarDocumento(doc.id);
+                tdAccion.appendChild(boton);
+            } else if (doc.estado === "Reservado") {
+                tdAccion.textContent = "Reservado";
+            }
+            
+            tr.appendChild(tdAccion);
+            tbody.appendChild(tr);
+        });
     })
     .catch(error => {
         console.error('Error:', error);
@@ -33,6 +90,116 @@ function insertarDato(id, valor) {
     }
 }
 
-function borrarToken() {
-    // Aquí va la lógica del token.
+function eliminarDocumento(id) {
+
+    let data = {
+        "iddocumento": id
+    }
+    fetch('http://localhost:8080/Libreria/documento/eliminar', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(response =>{
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            throw new Error("Usuario no autorizado (401)");
+        }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+    }).then(data => {
+        if (data.mensaje === "Actualizado") {
+            alert("Eliminado Correctamente");
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function habilitarDocumento(id) {
+    let data = {
+        "iddocumento": id
+    }
+    fetch('http://localhost:8080/Libreria/documento/habilitar', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(response =>{
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            throw new Error("Usuario no autorizado (401)");
+        }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+    }).then(data => {
+        if (data.mensaje === "Actualizado") {
+            alert("Documento Activado Correctamente");
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function verDocumento(id) {
+    let data = {
+        "iddocumento": id
+    }
+    fetch('http://localhost:8080/Libreria/documento', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(response =>{
+        if (response.status === 401) {
+            alert("Sesión expirada. Por favor, inicia sesión de nuevo.");
+            localStorage.removeItem("token");
+            window.location.href = "../LoginRegistro/login.html";
+            throw new Error("Usuario no autorizado (401)");
+        }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+    }).then(data => {
+        localStorage.setItem("Documento", JSON.stringify(data))
+        location.replace("../HistorialUsuario/descripcionDocumento.html");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function habilitarBoton() {
+    const input = document.getElementById("buscarDocumento");
+    const boton = document.getElementById("botonBuscar");
+    boton.disabled = input.value.trim() === "";
+}
+
+function guardarBusqueda(event) {
+    event.preventDefault();
+    const input = document.getElementById("buscarDocumento").value.trim();
+
+    if (input) {
+        localStorage.setItem("titulo", input);
+        window.location.href = "../Documentos/documentos.html";
+    }
 }

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import controlador.FachadaSistema;
 
-@WebServlet({"/usuario/datos", "/usuario/registrar", "/usuario/login"})
+@WebServlet({"/usuario/datos", "/usuario/registrar", "/usuario/login", "/usuario/documentos"})
 public class ServletUsuario extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private FachadaSistema gestor;
@@ -52,7 +52,18 @@ public class ServletUsuario extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCORSHeaders(response);
         String usuario = (String) request.getAttribute("usuario");
-        String jsonResponse = gestor.obtenerUsuario(usuario);
+        String urlPath = request.getRequestURI().substring(request.getContextPath().length());
+        String jsonResponse;
+        
+        if ("/usuario/datos".equals(urlPath)) {
+            jsonResponse = gestor.obtenerUsuario(usuario);
+        } else if ("/usuario/documentos".equals(urlPath)) {
+            jsonResponse = gestor.obtenerDocumentos(usuario);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            jsonResponse = "{\"mensaje\": \"URL no encontrada\"}";
+        }
+        
         response.getWriter().write(jsonResponse);
     }
 

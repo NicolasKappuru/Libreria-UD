@@ -100,31 +100,16 @@ public class LibroDAO implements DAO<LibroDTO>{
 	    }
 
 	public LibroDTO buscarPorId(int id) throws SQLException {
-	    String sql = "SELECT l.idlibro, l.isbn, l.numeropaginas, " +
-	                 "d.iddocumento, d.titulo, d.fechapublicacion, d.autores, " +
-	                 "d.mespublicacion, d.diapublicacion, d.editorial, d.estado, d.propietario " +
-	                 "FROM libro l " +
-	                 "JOIN documento d ON l.documento = d.iddocumento " +
-	                 "WHERE l.idlibro = ?";
+	    String sql = "SELECT isbn, numeropaginas FROM libro WHERE iddocumento = ?";
 	    
 	    try (Connection conn = ConexionDB.getInstance().getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	        pstmt.setInt(1, id);
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
-	                System.out.println(rs.getString("titulo"));
 	                return new LibroDTO.BuilderLibro()
 	                        .setIsbn(rs.getString("isbn"))
 	                        .setNumeroPaginas(rs.getString("numeropaginas"))
-	                        .setIdDocumento(rs.getInt("iddocumento"))  // Datos de documento heredados
-	                        .setTitulo(rs.getString("titulo"))
-	                        .setFechaPublicacion(rs.getString("fechapublicacion"))
-	                        .setAutores(rs.getString("autores"))
-	                        .setMesPublicacion(rs.getString("mespublicacion"))
-	                        .setDiaPublicacion(rs.getString("diapublicacion"))
-	                        .setEditorial(rs.getString("editorial"))
-	                        .setEstado(rs.getString("estado"))
-	                        .setPropietario(rs.getString("propietario"))
 	                        .build();
 	            }
 	        }

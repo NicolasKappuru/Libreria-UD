@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import controlador.FachadaSistema;
 
-@WebServlet({"/documento/crear", "/documento/modificar", "/documento/reservar",
-		"/documento/entregar", "/documento/eliminar", "/documento/habilitar"})
+@WebServlet({"/documento", "/documento/eventos","/documento/crear", "/documento/modificar", "/documento/reservar",
+		"/documento/entregar", "/documento/eliminar", "/documento/habilitar", "/documento/titulo"})
 public class ServletDocumentos extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private FachadaSistema gestor;
@@ -63,6 +63,13 @@ public class ServletDocumentos extends HttpServlet{
         else if("/documento/habilitar".equals(urlPath)) {
         	jsonResponse = gestor.habilitarDocumento(request, usuario);
         }
+        else if("/documento".equals(urlPath)) {
+        	jsonResponse = gestor.obtenerDocumento(request);
+        } else if("/documento/eventos".equals(urlPath)) {
+        	jsonResponse = gestor.buscarEventos(request);
+        } else if("/documento/titulo".equals(urlPath)) {
+        	jsonResponse = gestor.obtenerPorTitulo(request);
+        } 
         else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             jsonResponse = "{\"mensaje\": \"URL no encontrada\"}";

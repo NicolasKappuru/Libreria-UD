@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -237,6 +238,105 @@ public class GestorDocumentos {
         } catch (IOException e) {
         	Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
+
+	public String buscarEventos(HttpServletRequest request) throws JsonProcessingException{
+		try {
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+			
+			List<String> lista = eventoDAO.buscarPorDocumento(documento.getIddocumento());
+			String json = objectMapper.writeValueAsString(lista);
+			
+            return json;
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
+
+	public String obtenerDocumentos(String usuario) throws JsonProcessingException{
+    	try {
+    		List<Map<String, Object>> listaDocumentos = documentoDAO.buscarPorNombre(usuario);
+            String json = objectMapper.writeValueAsString(listaDocumentos);
+            return json; 
+        } catch (SQLException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+            
+            try {
+                return objectMapper.writeValueAsString(errorResponse);
+            } catch (IOException ioException) {
+                return "{\"mensaje\": \"Error al procesar JSON\"}";
+            }
+        }
+    }
+
+	public String obtenerDocumento(HttpServletRequest request) throws JsonProcessingException{
+		
+		try {
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+			
+			DocumentoDTO documentoDTO = documentoDAO.buscarPorId(documento.getIddocumento());
+			documento.setIddocumento(documentoDTO.getIdDocumento());
+		    documento.setAutores(documentoDTO.getAutores());
+		    documento.setEditorial(documentoDTO.getEditorial());
+		    documento.setFechaPublicacion(documentoDTO.getFechaPublicacion());
+		    documento.setTitulo(documentoDTO.getTitulo());
+		    documento.setTipo(documentoDTO.getTipo());
+		    documento.setEstado(documentoDTO.getEstado());
+		    documento.setPropietario(documentoDTO.getPropietario());
+			if (documentoDTO.getTipo().equals("libro")) {
+			    LibroDTO libro = fabrica.crearLibro().buscarPorId(documentoDTO.getIdDocumento());
+			    documento.setNumPaginas(libro.getNumeroPaginas());
+			    documento.setIsbn(libro.getIsbn());
+			} else if (documentoDTO.getTipo().equals("articulo")) {
+			    ArticuloDTO articulo = fabrica.crearArticulo().buscarPorId(documentoDTO.getIdDocumento());
+			    documento.setSsn(articulo.getSsn());
+			} else if (documentoDTO.getTipo().equals("ponencia")) {
+			    PonenciaDTO ponencia = fabrica.crearPonencia().buscarPorId(documentoDTO.getIdDocumento());
+			    documento.setNombreCongreso(ponencia.getCongreso());
+			    documento.setIsbn(ponencia.getIsbn());
+			}
+			
+            return objectMapper.writeValueAsString(documento);
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
+            return objectMapper.writeValueAsString(errorResponse);
+        }
+	}
+
+	public String obtenerPorTitulo(HttpServletRequest request) throws JsonProcessingException{
+		try {
+			Documento documento = objectMapper.readValue(request.getReader(), Documento.class);
+			
+			List<DocumentoDTO> lista = documentoDAO.buscarPorTitulo(documento.getTitulo());
+			String json = objectMapper.writeValueAsString(lista);
+            return json;
+            
+        } catch (IOException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error al leer JSON: " + e.getMessage());
+            return objectMapper.writeValueAsString(errorResponse);
+        } catch (SQLException e) {
+        	Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("mensaje", "Error en la base de datos: " + e.getMessage());
+
             return objectMapper.writeValueAsString(errorResponse);
         }
 	}

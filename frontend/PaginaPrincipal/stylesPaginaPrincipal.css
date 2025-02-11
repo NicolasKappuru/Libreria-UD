@@ -21,7 +21,8 @@ header {
 
 h1 {
     font-size: 36px;
-    color: #1e90ff;
+    color: black;
+    /* color: #1e90ff; */
     margin: 0;
 }
 
@@ -37,7 +38,9 @@ p {
     width: 80%;
     max-width: 1200px; /* Limita el ancho máximo para mejorar la estética */
     margin: 20px auto; /* Centra el contenedor horizontalmente */
+    margin-top: 0;
     padding: 20px; /* Espaciado adicional dentro del contenedor */
+    padding-top: 1%;
 }
 
 /* Estilo para el panel izquierdo */
@@ -107,7 +110,7 @@ p {
     width: 33%;
 }
 
-.botonCrearDocumento:hover {
+.botonCrearDocumento:hover, .botonBuscarDocumento:hover {
     background-color: #4682b4;
 }
 
@@ -157,6 +160,26 @@ th {
 
 .derecha button:hover {
     background-color: #4682b4;
+}
+
+.botonCerrarSesion {
+    background-color: #1e90ff;
+    color: white;
+    padding: 1.25%;
+    border: 0;
+    border-radius: 6%;
+
+    margin-left: 30%;
+    cursor: pointer;
+    position: absolute;
+}
+
+.botonCerrarSesion:hover {
+    background-color: #860000;
+}
+
+.botonCerrarSesion:active {
+    background-color: #bc0404;
 }
 
 /* Estilo para el pie de página */

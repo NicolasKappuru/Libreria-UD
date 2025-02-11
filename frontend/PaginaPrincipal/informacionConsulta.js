@@ -23,16 +23,3 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('Error:', error);
     });
 });
-
-function insertarDato(id, valor) {
-    let elemento = document.getElementById(id);
-    if (elemento) {
-        let nuevoP = document.createElement("p");
-        nuevoP.innerText = valor;
-        elemento.parentNode.insertBefore(nuevoP, elemento.nextSibling);
-    }
-}
-
-function borrarToken() {
-    // Aquí va la lógica del token.
-}

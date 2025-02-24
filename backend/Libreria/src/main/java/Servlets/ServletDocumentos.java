@@ -14,11 +14,11 @@ import controlador.FachadaSistema;
 		"/documento/entregar", "/documento/eliminar", "/documento/habilitar", "/documento/titulo"})
 public class ServletDocumentos extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private FachadaSistema gestor;
+	private FachadaSistema gestor; 
 	
 	public void init() throws ServletException {
         super.init();
-        gestor = FachadaSistema.getInstancia();
+        gestor = FachadaSistema.getInstancia(); //Se instancia la fachada 
         
     }
 	

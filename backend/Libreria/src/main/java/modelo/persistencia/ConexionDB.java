@@ -10,7 +10,8 @@ public class ConexionDB {
 	private Connection conexion;
 	private static final String URL = "jdbc:postgresql://localhost:5432/LibreriaDB";
 	private static final String USER = "postgres";
-	private static final String PASSWORD = "angrybirds";
+
+	private static final String PASSWORD = "pwd";
 
 	
 	private ConexionDB() throws SQLException {
